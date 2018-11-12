@@ -61,20 +61,47 @@ cn_pipe_conumee <-
       if (verbose) tictoc::toc()
     }
     # Run Conumee-based CNV analysis
-    # Conumee Annotation.
+    # Create Conumee annotation.
     if (verbose) {
       message("Preparing CNV analysis: annotation...")
       tictoc::tic()
     }
     cnv_anno <- CNV.create_anno.yamat(x)
     if (verbose) tictoc::toc()
-    # Load data.
+    # Load data to Conumee.
     if (verbose) {
       message("Preparing CNV analysis: loading data...")
       tictoc::tic()
     }
     cnv_dat <- .CNV_load(x)
     if (verbose) tictoc::toc()
+    # Main Conumee CNV analysis.
+    if (verbose) {
+      message("Running CNV analysis: main analysis...")
+      tictoc::tic()
+    }
+    ref_samples <- .reference_sample_names(x, label = "ref")
+    qry_samples <- .query_sample_names(x, label = "query")
+    cnv_results <- lapply(
+      qry_samples,
+      function(nm) {
+        i <- which(qry_samples == nm)
+        if (verbose) {
+          message("Run CNV for sample ", "(", i, "/", length(qry_samples), "): ", nm)
+          tictoc::tic()
+        }
+        cnv_res <-
+          conumee_analysis(cnv_dat[nm], cnv_dat[ref_samples], anno = cnv_anno)
+        if (verbose) tictoc::toc()
+        cnv_res
+      })
+    if (verbose) tictoc::toc()
+    dat <- new.env(parent = parent.frame())
+    dat$conumee_results <- cnv_results
+    dat$minfi_obj <- x
+    dat$batch <- batch
+    dat$batch2 <- batch2
+    ConumeePipe(dat = dat)
   }
 
 
