@@ -10,3 +10,22 @@ Description: The package is used to perform copy number analysis with 850K/EPIC
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
+Imports: 
+    magrittr (>= 1.5),
+    tictoc (>= 1.0),
+    minfi (>= 1.27.0),
+    conumee (>= 1.15.0),
+    yamat (>= 0.0.0.9004)
+RoxygenNote: 6.1.0
+Suggests: 
+    testthat (>= 2.0.0),
+    minfiData (>= 0.27.0),
+    GenomeInfoDb (>= 1.17.3),
+    IRanges (>= 2.15.18),
+    rtracklayer (>= 1.41.8),
+    IlluminaHumanMethylation450kanno.ilmn12.hg19 (>= 0.6.0),
+    IlluminaHumanMethylation450kmanifest (>= 0.4.0),
+    IlluminaHumanMethylationEPICanno.ilm10b2.hg19 (>= 0.6.0),
+    IlluminaHumanMethylationEPICanno.ilm10b3.hg19 (>= 0.6.0),
+    IlluminaHumanMethylationEPICanno.ilm10b4.hg19 (>= 0.6.0),
+    IlluminaHumanMethylationEPICmanifest (>= 0.3.0)
