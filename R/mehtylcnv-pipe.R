@@ -44,7 +44,7 @@ methylcnv_pipe <-
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
-    .check_args_cn_pipe_conumee(report_dir = report_dir)
+    .check_args_pipe(report_dir = report_dir)
     # Preprocess.
     x <-
       preprocess(
