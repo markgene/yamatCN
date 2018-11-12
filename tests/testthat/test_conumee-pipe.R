@@ -12,13 +12,14 @@ test_that("cn_pipe_conumee()", {
   testthat::skip_if(skip_flag, "Skip")
   if (!skip_flag)
     library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
-  testthat::expect_error(cn_pipe_conumee(
-    ref = ref,
-    qry = qry,
-    report_dir = report_dir,
-    norm_method = "swan",
-    batch = NULL,
-    batch2 = NULL
-  ),
-  NA)
+  testthat::expect_error(
+    cn_pipe_conumee(
+      ref = ref,
+      qry = qry,
+      norm_method = "swan",
+      batch = NULL,
+      batch2 = NULL
+    ),
+    NA
+  )
 })
