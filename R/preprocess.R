@@ -41,8 +41,7 @@ preprocess <-
       qry = qry,
       norm_method = norm_method,
       batch = batch,
-      batch2 = batch2,
-      param = param
+      batch2 = batch2
     )
     # Combine and normalize
     if (verbose) {
