@@ -6,12 +6,16 @@
 #'   \code{\link[minfi]{RGChannelSet-class}}.
 #' @param qry Query samples stored in an object of
 #'   \code{\link[minfi]{RGChannelSet-class}}.
+#' @param report_dir A character scalar of reporting.
 #' @param norm_method A character scalar of method, including raw, illumina,
 #'   swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to "swan".
 #' @param batch factor or vector indicating batches. Default to \code{NULL}, -
 #'   do not remove batch effect.
 #' @param batch2 optional factor or vector indicating a second series of
 #'   batches. Default to \code{NULL}, - do not remove batch effect.
+#' @param pipe_file A character scalar of the filename storing the pipeline
+#'   result sample by sample. Default to "conumee.Rda". Turn off the saving by
+#'   set it to NULL.
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Any arguments passed to \code{\link[conumee]{CNV.segment}}.
@@ -24,9 +28,11 @@
 cn_pipe_conumee <-
   function(ref,
            qry,
+           report_dir,
            norm_method = c("swan", "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz"),
            batch = NULL,
            batch2 = NULL,
+           pipe_file = "conumee.Rda",
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
@@ -34,6 +40,7 @@ cn_pipe_conumee <-
     .check_cn_pipe_conumee(
       ref = ref,
       qry = qry,
+      report_dir = report_dir,
       norm_method = norm_method,
       batch = batch,
       batch2 = batch2,
@@ -62,7 +69,7 @@ cn_pipe_conumee <-
       message("Preparing CNV analysis: annotation...")
       tictoc::tic()
     }
-    cnv_anno <- CNV.create_anno.yamat(x)
+    cnv_anno <- CNV.create_anno.yamat(x, detail_regions_preset = "conumee")
     if (verbose) tictoc::toc()
     # Load data to Conumee.
     if (verbose) {
@@ -92,12 +99,21 @@ cn_pipe_conumee <-
         cnv_res
       })
     if (verbose) tictoc::toc()
+    # Create ConumeePipe object
     dat <- new.env(parent = parent.frame())
     dat$conumee_results <- cnv_results
     dat$minfi_obj <- x
     dat$batch <- batch
     dat$batch2 <- batch2
-    ConumeePipe(dat = dat)
+    cp_obj <- ConumeePipe(dat = dat)
+    # Save the result
+    if (is.null(pipe_file)) {
+      if (verbose)
+        message("Skip saving the pipeline result sample by sample.")
+    } else {
+      save_pipe(cp_obj, outdir = report_dir, filename = pipe_file)
+    }
+    cp_obj
   }
 
 
@@ -107,6 +123,7 @@ cn_pipe_conumee <-
 #'   \code{\link[minfi]{RGChannelSet-class}}.
 #' @param qry Query samples stored in an object of
 #'   \code{\link[minfi]{RGChannelSet-class}}.
+#' @param report_dir A character scalar of reporting.
 #' @param norm_method A character scalar of method, including raw, illumina,
 #'   swan, quantile, noob, funnorm, yamat, dkfz, quantile.
 #' @param batch factor or vector indicating batches.
@@ -122,6 +139,7 @@ cn_pipe_conumee <-
 .check_cn_pipe_conumee <-
   function(ref,
            qry,
+           report_dir,
            norm_method,
            batch,
            batch2,
@@ -130,6 +148,8 @@ cn_pipe_conumee <-
       stop("ref is required!")
     if (missing(qry))
       stop("qry is required!")
+    if (missing(report_dir))
+      stop("report_dir is required!")
     norm_methods <-
       c("yamat",
         "dkfz",

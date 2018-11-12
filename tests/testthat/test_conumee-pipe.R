@@ -16,6 +16,7 @@ test_that("cn_pipe_conumee()", {
     cn_pipe_conumee(
       ref = ref,
       qry = qry,
+      report_dir = report_dir,
       norm_method = "swan",
       batch = NULL,
       batch2 = NULL
