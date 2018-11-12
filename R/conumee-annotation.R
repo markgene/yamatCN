@@ -12,59 +12,6 @@
 NULL
 
 
-#' Get detail regions
-#'
-#' The detail regions are used in the authors' studies, focusing on pediatric
-#' brain tumors and solid tumors.
-#'
-#' @param thick An integer scalar defined the flanking region size in bp.
-#'   Default to 500000.
-#' @return A \code{GRange} object.
-#' @export
-detail_regions <- function(thick = 500000) {
-  e <- new.env()
-  data(detail_regions, package = "conumee", envir = e)
-  detail_regions <- e$detail_regions
-  gene_list <-
-    c("MYC",
-      "MYCN",
-      "CDKN2A/B",
-      "PTCH1",
-      "PTEN",
-      "TP53",
-      "CDK4",
-      "CDK6",
-      "ERBB2",
-      "EGFR",
-      "MET",
-      "MDM2",
-      "GLI2",
-      "CCND1",
-      "RB1",
-      "NF1")
-  keep <- mcols(detail_regions)$name %in% gene_list
-  gr1 <- detail_regions[keep]
-  GenomicRanges::mcols(gr1) <- GenomicRanges::mcols(gr1)[, c(1, 2)]
-  df <- data.frame(
-    chr = c("chr4", "chr19", "chr22", "chr12", "chr5", "chr1", "chr7", "chr6", "chr8", "chr17", "chr22"),
-    start = c(55095256, 54169933, 29999545, 4382902, 1253282, 204485507, 140433812, 135502453, 67474410, 58677544, 24129118),
-    end =   c(55164414, 54265683, 30094589, 4414522, 1295161, 204527248, 140624564, 135540311, 67525484, 58743640, 24176705),
-    strand = "+",
-    name = c("PDGFRA", "C19MC", "NF2", "CCND2", "TERT", "MDM4", "BRAF", "MYB", "MYBL1", "PPM1D", "SMARCB1"),
-    stringsAsFactors = FALSE
-  )
-  gr2 <- GenomicRanges::makeGRangesFromDataFrame(df, keep.extra.columns = TRUE)
-  GenomicRanges::mcols(gr2)$thick <- IRanges::IRanges(
-    start = df$start - thick,
-    end = df$end + thick
-  )
-  GenomeInfoDb::seqlevels(gr1) <- paste0("chr", c(seq(22), "X", "Y"))
-  GenomeInfoDb::seqlevels(gr2) <- paste0("chr", c(seq(22), "X", "Y"))
-  gr <- c(gr1, gr2)
-  gr
-}
-
-
 #' Create Conumee annotation for CNV analysis.
 #'
 #' Rewrite \code{\link[conumee]{CNV.create_anno}()} to be compatible with
@@ -300,6 +247,61 @@ CNV.create_anno2 <-
     message(" - ", length(object@bins), " bins remaining")
     return(object)
   }
+
+
+
+
+#' Get detail regions: yamat
+#'
+#' The detail regions are used in the authors' studies, focusing on pediatric
+#' brain tumors and solid tumors.
+#'
+#' @param thick An integer scalar defined the flanking region size in bp.
+#'   Default to 500000.
+#' @return A \code{GRange} object.
+#' @export
+detail_regions <- function(thick = 500000) {
+  e <- new.env()
+  data(detail_regions, package = "conumee", envir = e)
+  detail_regions <- e$detail_regions
+  gene_list <-
+    c("MYC",
+      "MYCN",
+      "CDKN2A/B",
+      "PTCH1",
+      "PTEN",
+      "TP53",
+      "CDK4",
+      "CDK6",
+      "ERBB2",
+      "EGFR",
+      "MET",
+      "MDM2",
+      "GLI2",
+      "CCND1",
+      "RB1",
+      "NF1")
+  keep <- mcols(detail_regions)$name %in% gene_list
+  gr1 <- detail_regions[keep]
+  GenomicRanges::mcols(gr1) <- GenomicRanges::mcols(gr1)[, c(1, 2)]
+  df <- data.frame(
+    chr = c("chr4", "chr19", "chr22", "chr12", "chr5", "chr1", "chr7", "chr6", "chr8", "chr17", "chr22"),
+    start = c(55095256, 54169933, 29999545, 4382902, 1253282, 204485507, 140433812, 135502453, 67474410, 58677544, 24129118),
+    end =   c(55164414, 54265683, 30094589, 4414522, 1295161, 204527248, 140624564, 135540311, 67525484, 58743640, 24176705),
+    strand = "+",
+    name = c("PDGFRA", "C19MC", "NF2", "CCND2", "TERT", "MDM4", "BRAF", "MYB", "MYBL1", "PPM1D", "SMARCB1"),
+    stringsAsFactors = FALSE
+  )
+  gr2 <- GenomicRanges::makeGRangesFromDataFrame(df, keep.extra.columns = TRUE)
+  GenomicRanges::mcols(gr2)$thick <- IRanges::IRanges(
+    start = df$start - thick,
+    end = df$end + thick
+  )
+  GenomeInfoDb::seqlevels(gr1) <- paste0("chr", c(seq(22), "X", "Y"))
+  GenomeInfoDb::seqlevels(gr2) <- paste0("chr", c(seq(22), "X", "Y"))
+  gr <- c(gr1, gr2)
+  gr
+}
 
 
 #' Create CNV annotaion with \code{yamat} preset.
