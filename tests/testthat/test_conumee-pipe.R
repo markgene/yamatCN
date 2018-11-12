@@ -6,8 +6,8 @@ ref <- RGsetEx[, 1:3]
 qry <- RGsetEx[, 4:6]
 report_dir <- tempdir()
 
-test_that(".check_cn_pipe_conumee()", {
-  testthat::expect_error(.check_cn_pipe_conumee(
+test_that("cn_pipe_conumee()", {
+  testthat::expect_error(cn_pipe_conumee(
     ref = ref,
     qry = qry,
     report_dir = report_dir,
