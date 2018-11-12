@@ -68,6 +68,13 @@ cn_pipe_conumee <-
     }
     cnv_anno <- CNV.create_anno.yamat(x)
     if (verbose) tictoc::toc()
+    # Load data.
+    if (verbose) {
+      message("Preparing CNV analysis: loading data...")
+      tictoc::tic()
+    }
+    cnv_dat <- .CNV_load(x)
+    if (verbose) tictoc::toc()
   }
 
 
