@@ -51,6 +51,15 @@ cn_pipe_conumee <-
     gmset <- .combine_cn_pipe_conumee(ref = ref, qry = qry, batch = batch, batch2 = batch2) %>%
       yamat::normalize(., norm_method = norm_method)
     if (verbose) tictoc::toc()
+    # Remove batch effects
+    if (!is.null(batch)) {
+      if (verbose) {
+        message("Removing batch effects...")
+        tictoc::tic()
+      }
+      gmset <- yamat::remove_batch_effect(gmset, batch = batch, batch2 = batch2)
+      if (verbose) tictoc::toc()
+    }
   }
 
 
