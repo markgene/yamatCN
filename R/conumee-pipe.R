@@ -48,7 +48,7 @@ cn_pipe_conumee <-
       message("Combining ref and query and then normalizing...")
       tictoc::tic()
     }
-    gmset <- .combine_cn_pipe_conumee(ref = ref, qry = qry, batch = batch, batch2 = batch2) %>%
+    x <- .combine_cn_pipe_conumee(ref = ref, qry = qry, batch = batch, batch2 = batch2) %>%
       yamat::normalize(., norm_method = norm_method)
     if (verbose) tictoc::toc()
     # Remove batch effects
@@ -57,9 +57,17 @@ cn_pipe_conumee <-
         message("Removing batch effects...")
         tictoc::tic()
       }
-      gmset <- yamat::remove_batch_effect(gmset, batch = batch, batch2 = batch2)
+      x <- yamat::remove_batch_effect(x, batch = batch, batch2 = batch2)
       if (verbose) tictoc::toc()
     }
+    # Run Conumee-based CNV analysis
+    # Conumee Annotation.
+    if (verbose) {
+      message("Preparing CNV analysis: annotation...")
+      tictoc::tic()
+    }
+    cnv_anno <- CNV.create_anno.yamat(x)
+    if (verbose) tictoc::toc()
   }
 
 
