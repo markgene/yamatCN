@@ -1,5 +1,5 @@
 context("Utilities")
-library(yamat)
+library(yamatCN)
 
 
 test_that("pipe operator works", {
