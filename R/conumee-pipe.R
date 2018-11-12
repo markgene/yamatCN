@@ -193,3 +193,26 @@ cn_pipe_conumee <-
   # Combine
   minfi::combineArrays(qry, ref)
 }
+
+
+#' A wrapper of \code{\link[conumee]{CNV.load}()}.
+#'
+#' @param x An object of \code{\link[minfi]{GenomicRatioSet-class}} or
+#'   \code{\link[minfi]{GenomicMethylSet-class}}.
+#' @return An object of \code{\link[conumee]{CNV.data-class}} object.
+#' @noRd
+.CNV_load <- function(x) {
+  if (inherits(x, "GenomicRatioSet")) {
+    cnv_dat <- conumee::CNV.load(x)
+  } else if (inherits(x, "GenomicMethylSet")) {
+    cnv_dat <-
+      minfi::ratioConvert(x) %>%
+      conumee::CNV.load()
+  } else {
+    stop(
+      "Invalid class. Require GenomicRatioSet or GenomicMethylSet, but ",
+      as.character(class(RGsetEx), " is provided.")
+    )
+  }
+  cnv_dat
+}
