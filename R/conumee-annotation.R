@@ -312,26 +312,41 @@ detail_regions <- function(thick = 500000) {
 #' @param x An object of \code{\link[minfi]{RGChannelSet-class}} or
 #'   \code{\link[minfi]{MethylSet-class}} or
 #'   \code{\link[minfi]{GenomicMethylSet-class}}.
+#' @param detail_regions_preset A character scalar of the name of preset detail
+#'   regions, including "conumee" and "yamat". Default to "yamat".
 #' @return An object of \code{\link[conumee]{CNV.anno-class}}.
 #' @details Exclude regions are from \code{conumee} package.
 #' @export
-CNV.create_anno.yamat <- function(x) {
-  e <- new.env()
-  data(exclude_regions, package = "conumee", envir = e)
-  detail_regions <- detail_regions()
-  array_type <- minfi::annotation(x)["array"]
-  if (array_type == "IlluminaHumanMethylation450k") {
-    array_type <- "450k"
-  } else if (array_type == "IlluminaHumanMethylationEPIC") {
-    array_type <- "EPIC"
-  } else {
-    array_type <- "overlap"
+CNV.create_anno.yamat <-
+  function(x,
+           detail_regions_preset = c("yamat", "conumee")) {
+    # Exclude regions
+    e <- new.env()
+    data(exclude_regions, package = "conumee", envir = e)
+    # Include regions
+    if (detail_regions_preset == "yamat") {
+      detail_regions <- detail_regions()
+    } else if (detail_regions_preset == "conumee") {
+      data(detail_regions, package = "conumee", envir = e)
+      detail_regions <- e$detail_regions
+    } else {
+      stop("detail_regions_preset should be either yamat or conumee.")
+    }
+    # Array names
+    array_type <- minfi::annotation(x)["array"]
+    if (array_type == "IlluminaHumanMethylation450k") {
+      array_type <- "450k"
+    } else if (array_type == "IlluminaHumanMethylationEPIC") {
+      array_type <- "EPIC"
+    } else {
+      array_type <- "overlap"
+    }
+    # Create
+    CNV.create_anno2(
+      array_type = array_type,
+      array_anno = minfi::annotation(x)["annotation"],
+      chrXY = TRUE,
+      exclude_regions = e$exclude_regions,
+      detail_regions = detail_regions
+    )
   }
-  CNV.create_anno2(
-    array_type = array_type,
-    array_anno = minfi::annotation(x)["annotation"],
-    chrXY = TRUE,
-    exclude_regions = e$exclude_regions,
-    detail_regions = detail_regions
-  )
-}
