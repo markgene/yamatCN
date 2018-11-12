@@ -32,6 +32,8 @@ cn_pipe_conumee <-
            param = list(),
            overwrite = FALSE,
            verbose = TRUE) {
+    # Check arguments.
+    norm_method <- match.arg(norm_method)
     .check_cn_pipe_conumee(
       ref = ref,
       qry = qry,
@@ -44,7 +46,7 @@ cn_pipe_conumee <-
   }
 
 
-#' Check arguments of \code{cn_pipe_conumee}
+#' Check arguments of \code{cn_pipe_conumee}.
 #'
 #' @param ref Reference samples stored in an object of
 #'   \code{\link[minfi]{RGChannelSet-class}}.
