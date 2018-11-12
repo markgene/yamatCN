@@ -25,7 +25,7 @@
 #'   Batch effects are removed on methylation and unmethylation signals (log2
 #'   transformed) separately.
 #' @export
-cn_pipe_conumee <-
+conumee_pipe <-
   function(ref,
            qry,
            report_dir,
@@ -36,7 +36,7 @@ cn_pipe_conumee <-
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
-    .check_args_cn_pipe_conumee(report_dir = report_dir)
+    .check_args_conumee_pipe(report_dir = report_dir)
     # Preprocess.
     x <-
       preprocess(
@@ -107,7 +107,7 @@ cn_pipe_conumee <-
 #' @param report_dir A character scalar of reporting.
 #' @return TRUE if pass all checks (invisible).
 #' @noRd
-.check_args_cn_pipe_conumee <-
+.check_args_conumee_pipe <-
   function(report_dir) {
     if (missing(report_dir))
       stop("report_dir is required!")
