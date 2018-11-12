@@ -4,9 +4,9 @@
 \alias{cn_pipe_conumee}
 \title{CNV pipeline based-upon Conumee package.}
 \usage{
-cn_pipe_conumee(ref, qry, report_dir, norm_method = c("swan", "illumina",
-  "raw", "quantile", "noob", "funnorm", "yamat", "dkfz"), batch = NULL,
-  batch2 = NULL, param = list(), overwrite = FALSE, verbose = TRUE)
+cn_pipe_conumee(ref, qry, norm_method = c("swan", "illumina", "raw",
+  "quantile", "noob", "funnorm", "yamat", "dkfz"), batch = NULL,
+  batch2 = NULL, overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{ref}{Reference samples stored in an object of
@@ -14,8 +14,6 @@ cn_pipe_conumee(ref, qry, report_dir, norm_method = c("swan", "illumina",
 
 \item{qry}{Query samples stored in an object of
 \code{\link[minfi]{RGChannelSet-class}}.}
-
-\item{report_dir}{A character scalar of reporting directory.}
 
 \item{norm_method}{A character scalar of method, including raw, illumina,
 swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to "swan".}
@@ -26,14 +24,14 @@ do not remove batch effect.}
 \item{batch2}{optional factor or vector indicating a second series of
 batches. Default to \code{NULL}, - do not remove batch effect.}
 
-\item{param}{A list for generating sample CNV report. Default to \code{list()}.}
-
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
 \item{verbose}{A logical scalar. Default to TRUE.}
+
+\item{...}{Any arguments passed to \code{\link[conumee]{CNV.segment}}.}
 }
 \value{
-TBA.
+An object of \code{\link{ConumeePipe}} class.
 }
 \description{
 CNV pipeline based-upon Conumee package.
