@@ -4,12 +4,15 @@
 \alias{CNV.create_anno.yamat}
 \title{Create CNV annotaion with \code{yamat} preset.}
 \usage{
-CNV.create_anno.yamat(x)
+CNV.create_anno.yamat(x, detail_regions_preset = c("yamat", "conumee"))
 }
 \arguments{
 \item{x}{An object of \code{\link[minfi]{RGChannelSet-class}} or
 \code{\link[minfi]{MethylSet-class}} or
 \code{\link[minfi]{GenomicMethylSet-class}}.}
+
+\item{detail_regions_preset}{A character scalar of the name of preset detail
+regions, including "conumee" and "yamat". Default to "yamat".}
 }
 \value{
 An object of \code{\link[conumee]{CNV.anno-class}}.

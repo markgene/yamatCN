@@ -4,9 +4,10 @@
 \alias{cn_pipe_conumee}
 \title{CNV pipeline based-upon Conumee package.}
 \usage{
-cn_pipe_conumee(ref, qry, norm_method = c("swan", "illumina", "raw",
-  "quantile", "noob", "funnorm", "yamat", "dkfz"), batch = NULL,
-  batch2 = NULL, overwrite = FALSE, verbose = TRUE)
+cn_pipe_conumee(ref, qry, report_dir, norm_method = c("swan", "illumina",
+  "raw", "quantile", "noob", "funnorm", "yamat", "dkfz"), batch = NULL,
+  batch2 = NULL, pipe_file = "conumee.Rda", overwrite = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{ref}{Reference samples stored in an object of
@@ -14,6 +15,8 @@ cn_pipe_conumee(ref, qry, norm_method = c("swan", "illumina", "raw",
 
 \item{qry}{Query samples stored in an object of
 \code{\link[minfi]{RGChannelSet-class}}.}
+
+\item{report_dir}{A character scalar of reporting.}
 
 \item{norm_method}{A character scalar of method, including raw, illumina,
 swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to "swan".}
@@ -23,6 +26,10 @@ do not remove batch effect.}
 
 \item{batch2}{optional factor or vector indicating a second series of
 batches. Default to \code{NULL}, - do not remove batch effect.}
+
+\item{pipe_file}{A character scalar of the filename storing the pipeline
+result sample by sample. Default to "conumee.Rda". Turn off the saving by
+set it to NULL.}
 
 \item{overwrite}{A logical scalar. Default to FALSE.}
 

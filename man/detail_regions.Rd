@@ -2,7 +2,7 @@
 % Please edit documentation in R/conumee-annotation.R
 \name{detail_regions}
 \alias{detail_regions}
-\title{Get detail regions}
+\title{Get detail regions: yamat}
 \usage{
 detail_regions(thick = 5e+05)
 }
