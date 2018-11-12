@@ -223,6 +223,34 @@ cn_pipe_conumee <-
   }
   cnv_dat
 }
+
+
+#' Main Conumee CNV analysis
+#'
+#' @param query A \code{\link[conumee]{CNV.data-class}} object of query sample
+#'   (single sample).
+#' @param ref A \code{\link[conumee]{CNV.data-class}} object of reference set.
+#' @param anno A \code{\link[conumee]{CNV.anno-class}} object. Use
+#'   \code{\link[conumee]{CNV.create_anno}} or \code{\link{CNV.create_anno2}}
+#'   to create.
+#' @param intercept A logical scalar setting the \code{intercept} argument of
+#'    \code{\link[conumee]{CNV.fit}}. Should intercept be considered? Defaults
+#'    to TRUE.
+#' @param ... Any arguments passed to \code{\link[conumee]{CNV.segment}}.
+#' @return An object of \code{\link[conumee]{CNV.analysis-class}}.
+#' @export
+conumee_analysis <- function(query, ref, anno, intercept = TRUE, ...) {
+  conumee::CNV.fit(
+    query = query,
+    ref = ref,
+    anno = anno) %>%
+    conumee::CNV.bin() %>%
+    conumee::CNV.detail() %>%
+    conumee::CNV.segment(...)
+}
+
+
+
 #' Query sample names.
 #'
 #' @param x An object of \code{\link[minfi]{RGChannelSet-class}} or
