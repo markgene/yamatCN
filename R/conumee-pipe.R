@@ -43,6 +43,14 @@ cn_pipe_conumee <-
       batch2 = batch2,
       param = param
     )
+    # Combine and normalize
+    if (verbose) {
+      message("Combining ref and query and then normalizing...")
+      tictoc::tic()
+    }
+    gmset <- .combine_cn_pipe_conumee(ref = ref, qry = qry, batch = batch, batch2 = batch2) %>%
+      yamat::normalize(., norm_method = norm_method)
+    if (verbose) tictoc::toc()
   }
 
 
@@ -116,3 +124,55 @@ cn_pipe_conumee <-
     invisible(TRUE)
   }
 
+
+#' Combine reference and query samples.
+#'
+#' Process the phenotype information and combine reference and query samples.
+#'
+#' @param ref Reference samples stored in an object of
+#'   \code{\link[minfi]{RGChannelSet-class}}.
+#' @param qry Query samples stored in an object of
+#'   \code{\link[minfi]{RGChannelSet-class}}.
+#' @param batch factor or vector indicating batches.
+#' @param batch2 optional factor or vector indicating a second series of
+#'   batches.
+#' @return An object of \code{\link[minfi]{RGChannelSet-class}} combining ref
+#'   and qry. A column \code{ref_query} is added to indicate if a sample is
+#'   query or reference.
+#' @details The function first adds a column \code{ref_query} is added to
+#'   indicate if a sample is query or reference. Then, it distinguish NAs in the
+#'   columns batch and batch2 of query and reference samples. If it is a query
+#'   sample, assign it to "qNA"; if a reference sample, assign it to "rNA". At
+#'   last, only the same columns of phenotype information are kept, and then
+#'   calls \code{\link[minfi]{combineArrays}} to combine query and reference.
+#' @noRd
+.combine_cn_pipe_conumee <- function(ref, qry, batch, batch2) {
+  qry_df <- minfi::pData(qry)
+  ref_df <- minfi::pData(ref)
+  # Add ref_query column
+  qry_df$ref_query <- "query"
+  ref_df$ref_query <- "ref"
+  # Distinguish NAs from query and reference if batch and batch2 are set.
+  if (!is.null(batch)) {
+    if (!batch %in% common_colnames)
+      stop("batch is not present in both query and reference.")
+    qry_batch <- qry_df[, batch]
+    ref_batch <- ref_df[, batch]
+    qry_df[, batch] <- ifelse(is.na(qry_batch), "qNA", paste0("q", qry_batch))
+    ref_df[, batch] <- ifelse(is.na(ref_batch), "rNA", paste0("q", ref_batch))
+  }
+  if (!is.null(batch2)) {
+    if (!batch2 %in% common_colnames)
+      stop("batch2 is not present in both query and reference.")
+    qry_batch2 <- qry_df[, batch2]
+    ref_batch2 <- ref_df[, batch2]
+    qry_df[, batch2] <- ifelse(is.na(qry_batch2), "qNA", paste0("q", qry_batch2))
+    ref_df[, batch2] <- ifelse(is.na(ref_batch2), "rNA", paste0("q", ref_batch2))
+  }
+  # Phenotype data should have the same columns.
+  common_colnames <- colnames(qry_df)[colnames(qry_df) %in% colnames(ref_df)]
+  minfi::pData(qry) <- qry_df[, common_colnames]
+  minfi::pData(ref) <- ref_df[, common_colnames]
+  # Combine
+  minfi::combineArrays(qry, ref)
+}
