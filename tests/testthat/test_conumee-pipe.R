@@ -2,11 +2,14 @@ context("Pipeline based upon Conumee package")
 library(yamatCN)
 library(minfiData)
 
+skip_flag <- TRUE
+
 ref <- RGsetEx[, 1:3]
 qry <- RGsetEx[, 4:6]
 report_dir <- tempdir()
 
 test_that("cn_pipe_conumee()", {
+  testthat::skip_if(skip_flag, "Skip")
   testthat::expect_error(cn_pipe_conumee(
     ref = ref,
     qry = qry,
