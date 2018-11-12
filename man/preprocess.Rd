@@ -2,7 +2,7 @@
 % Please edit documentation in R/preprocess.R
 \name{preprocess}
 \alias{preprocess}
-\title{CNV pipeline based-upon Conumee package.}
+\title{Preprocess}
 \usage{
 preprocess(ref, qry, norm_method = c("swan", "illumina", "raw",
   "quantile", "noob", "funnorm", "yamat", "dkfz"), batch = NULL,
@@ -27,8 +27,6 @@ batches. Default to \code{NULL}, - do not remove batch effect.}
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
 \item{verbose}{A logical scalar. Default to TRUE.}
-
-\item{...}{Any arguments passed to \code{\link[conumee]{CNV.segment}}.}
 }
 \value{
 An object of \code{\link[minfi]{GenomicMethylSet-class}} or
@@ -36,7 +34,7 @@ An object of \code{\link[minfi]{GenomicMethylSet-class}} or
   an object of \code{\link[minfi]{GenomicRatioSet-class}} is returned.
 }
 \description{
-CNV pipeline based-upon Conumee package.
+Preprocessing include normalization and batch effect removal.
 }
 \details{
 The \code{ref} and \code{qry} should include at least the following
