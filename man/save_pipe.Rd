@@ -4,12 +4,16 @@
 \name{save_pipe}
 \alias{save_pipe}
 \alias{save_pipe,ConumeePipe-method}
+\alias{save_pipe,MethylCNVPipe-method}
 \title{Save an object of pipeline classes.}
 \usage{
 save_pipe(x, outdir, filename, overwrite = FALSE, verbose = TRUE, ...)
 
 \S4method{save_pipe}{ConumeePipe}(x, outdir, filename = "conumee.Rda",
   overwrite = FALSE, verbose = TRUE)
+
+\S4method{save_pipe}{MethylCNVPipe}(x, outdir,
+  filename = "methylcnv.Rda", overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{An object.}
@@ -33,5 +37,7 @@ Save an object of pipeline classes.
 \section{Methods (by class)}{
 \itemize{
 \item \code{ConumeePipe}: x is \code{ConumeePipe}.
+
+\item \code{MethylCNVPipe}: x is \code{MethylCNVPipe}.
 }}
 
