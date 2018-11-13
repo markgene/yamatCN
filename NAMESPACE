@@ -2,9 +2,11 @@
 
 export("%>%")
 export(CNV.create_anno.yamat)
-export(cn_pipe_conumee)
+export(cal_log2_ratio)
 export(conumee_analysis)
+export(conumee_pipe)
 export(detail_regions)
+export(methylcnv_pipe)
 export(preprocess)
 export(save_pipe)
 exportClasses(ConumeePipe)
