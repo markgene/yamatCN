@@ -81,6 +81,8 @@ ConumeePipe <- setClass(
 #'   \item \code{minfi_obj}: an object of
 #'     \code{\link[minfi]{GenomicRatioSet-class}} or
 #'     \code{\link[minfi]{GenomicMethylSet-class}}.
+#'   \item \code{dnacopy_obj} an object of \code{\link[DNAcopy]{DNAcopy}} class.
+#'   \item \code{segments} a \code{data.frame} of segments.
 #' }
 #' @slot meta A list contain meta information.
 #' @export
