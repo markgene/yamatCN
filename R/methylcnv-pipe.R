@@ -23,6 +23,7 @@
 #' @param pipe_file A character scalar of the filename storing the pipeline
 #'   result sample by sample. Default to "methylCNV.Rda". Turn off the saving by
 #'   set it to NULL.
+#' @param dnacopy_seed An integer scalar to set the seed. Default to 1.
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @return An object of \code{\link{CMethylCNVPipe}} class.
@@ -42,6 +43,7 @@ methylcnv_pipe <-
            batch = NULL,
            batch2 = NULL,
            pipe_file = "methylCNV.Rda",
+           dnacopy_seed = 1,
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
@@ -81,7 +83,13 @@ methylcnv_pipe <-
       message("Segmentation with DNAcopy...")
       tictoc::tic()
     }
-    dnacopy_obj <- dnacopy_analysis.default(x = x[, qry_idx], lrr = lrr, seed = 1, verbose = verbose)
+    dnacopy_obj <-
+      dnacopy_analysis.default(
+        x = x[, qry_idx],
+        lrr = lrr,
+        seed = dnacopy_seed,
+        verbose = verbose
+      )
     dnacopy_segment_summary <- summarize_dnacopy_segments(dnacopy_obj)
     if (verbose) tictoc::toc()
     # Create MethylCNVPipe object
