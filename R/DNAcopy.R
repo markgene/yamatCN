@@ -24,7 +24,7 @@ dnacopy_analysis <- function(x, lrr, seed = 1, verbose = TRUE, ...) {
     message("Creating DNAcopy CNA object...")
     tictoc::tic()
   }
-  cna_obj <- .create_dnacopy_cna(x, lrr)
+  cna_obj <- create_dnacopy_cna(x, lrr)
   if (verbose) tictoc::toc()
   # Smooth
   if (verbose) {
@@ -45,7 +45,8 @@ dnacopy_analysis <- function(x, lrr, seed = 1, verbose = TRUE, ...) {
     message("Segmentation...")
     tictoc::tic()
   }
-  dnacopy_obj <- DNAcopy::segment(cna_obj, verbose = verbose, ...)
+  segment_verbose <- 1
+  dnacopy_obj <- DNAcopy::segment(cna_obj, verbose = segment_verbose, ...)
   if (verbose) tictoc::toc()
   dnacopy_obj
 }
