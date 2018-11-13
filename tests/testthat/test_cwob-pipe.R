@@ -11,7 +11,7 @@ report_dir <- tempdir()
 test_that("cwob_pipe()", {
   testthat::skip_if(skip_flag, "Skip")
   testthat::expect_error(
-    methylcnv_pipe(
+    cwob_pipe(
       ref = ref,
       qry = qry,
       report_dir = report_dir,
