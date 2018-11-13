@@ -46,6 +46,8 @@ setMethod(
   signature = "Pipe",
   function(object) {
     cat(paste(class(object), "object\n"))
+    dat_names <- paste(names(object@dat), sep = ", ", collapse = ", ")
+    cat(paste0("Data:            ", dat_names, "\n"))
     cat(paste0("Package version: ", object@meta$package_version, "\n"))
     cat(paste0("Created time:    ", object@meta$created_time, "\n"))
   }
