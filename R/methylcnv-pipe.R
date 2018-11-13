@@ -57,12 +57,14 @@ methylcnv_pipe <-
         overwrite = overwrite,
         verbose = verbose
       )
-    ref_samples <- .reference_sample_names(x, label = "ref")
-    qry_samples <- .query_sample_names(x, label = "query")
+    # Calculate LRR
+    ref_idx <- .reference_indices(x, label = "ref")
+    qry_idx <- .query_indices(x, label = "query")
     lrr <-
       cal_log2_ratio(
-        query = minfi::getCN(x[, qry_samples]),
-        reference = minfi::getCN(x[, ref_samples]),
+        query = minfi::getCN(x[, qry_idx]),
+        reference = minfi::getCN(x[, ref_idx]),
         method = "mean"
       )
+    # DNAcopy
   }

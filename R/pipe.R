@@ -53,6 +53,37 @@
 }
 
 
+#' Query sample indices.
+#'
+#' @param x An object of \code{\link[minfi]{RGChannelSet-class}} or
+#'   \code{\link[minfi]{MethylSet-class}} or
+#'   \code{\link[minfi]{GenomicMethylSet-class}}.
+#' @param label A character vector labeling query samples.
+#' @return An integer vector of query sample indices.
+#' @noRd
+.query_indices <- function(x, label = "query") {
+  df <- minfi::pData(x) %>%
+    as.data.frame()
+  which(df$ref_query == label)
+}
+
+
+#' Reference sample names.
+#'
+#' @param x An object of \code{\link[minfi]{RGChannelSet-class}} or
+#'   \code{\link[minfi]{MethylSet-class}} or
+#'   \code{\link[minfi]{GenomicMethylSet-class}}.
+#' @param label A character vector labeling reference samples
+#' @return An integer vector of reference sample indices.
+#' @noRd
+.reference_indices <- function(x, label = "ref") {
+  df <- minfi::pData(x) %>%
+    as.data.frame()
+  which(df$ref_query == label)
+}
+
+
+
 #' Calculate log2 ratio of observed and expected values of intensities.
 #'
 #' Calculate log2 ratio of observed and expected values of intensities at each

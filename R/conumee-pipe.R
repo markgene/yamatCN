@@ -69,8 +69,8 @@ conumee_pipe <-
       message("Running CNV analysis: main analysis...")
       tictoc::tic()
     }
-    ref_samples <- .reference_sample_names(x, label = "ref")
-    qry_samples <- .query_sample_names(x, label = "query")
+    ref_samples <- .reference_indices(x, label = "ref")
+    qry_samples <- .query_indices(x, label = "query")
     cnv_results <- lapply(
       qry_samples,
       function(nm) {
