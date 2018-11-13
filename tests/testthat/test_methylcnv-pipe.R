@@ -2,7 +2,7 @@ context("MethylCNV Pipeline")
 library(yamatCN)
 library(minfiData)
 
-skip_flag <- FALSE
+skip_flag <- TRUE
 
 ref <- RGsetEx[, 1:3]
 qry <- RGsetEx[, 4:6]
