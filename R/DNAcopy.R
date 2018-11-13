@@ -46,6 +46,7 @@ dnacopy_analysis <- function(x, lrr, seed = 1, verbose = TRUE, ...) {
     tictoc::tic()
   }
   segment_verbose <- 1
+  set.seed(seed)
   dnacopy_obj <- DNAcopy::segment(cna_obj, verbose = segment_verbose, ...)
   if (verbose) tictoc::toc()
   dnacopy_obj
