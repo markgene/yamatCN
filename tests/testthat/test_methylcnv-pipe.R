@@ -1,23 +1,21 @@
-context("Pipeline based upon Conumee package")
+context("MethylCNV Pipeline")
 library(yamatCN)
 library(minfiData)
 
-skip_flag <- TRUE
+skip_flag <- FALSE
 
 ref <- RGsetEx[, 1:3]
 qry <- RGsetEx[, 4:6]
 report_dir <- tempdir()
 
-test_that("conumee_pipe()", {
+test_that("methylcnv_pipe()", {
   testthat::skip_if(skip_flag, "Skip")
-  if (!skip_flag)
-    library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
   testthat::expect_error(
-    conumee_pipe(
+    methylcnv_pipe(
       ref = ref,
       qry = qry,
       report_dir = report_dir,
-      norm_method = "swan",
+      norm_method = "methylcnv",
       batch = NULL,
       batch2 = NULL
     ),
