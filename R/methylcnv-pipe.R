@@ -47,6 +47,10 @@ methylcnv_pipe <-
     # Check arguments.
     .check_args_pipe(report_dir = report_dir)
     # Preprocess.
+    if (verbose) {
+      message("Preprocessing...")
+      tictoc::tic()
+    }
     x <-
       preprocess(
         ref = ref,
@@ -57,7 +61,12 @@ methylcnv_pipe <-
         overwrite = overwrite,
         verbose = verbose
       )
+    if (verbose) tictoc::toc()
     # Calculate LRR
+    if (verbose) {
+      message("Calculating LRR...")
+      tictoc::tic()
+    }
     ref_idx <- .reference_indices(x, label = "ref")
     qry_idx <- .query_indices(x, label = "query")
     lrr <-
