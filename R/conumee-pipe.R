@@ -17,6 +17,7 @@
 #' @param pipe_file A character scalar of the filename storing the pipeline
 #'   result sample by sample. Default to "conumee.Rda". Turn off the saving by
 #'   set it to NULL.
+#' @param dnacopy_seed An integer scalar to set the seed. Default to 1.
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Any arguments passed to \code{\link[conumee]{CNV.segment}}.
@@ -34,6 +35,7 @@ conumee_pipe <-
            batch = NULL,
            batch2 = NULL,
            pipe_file = "conumee.Rda",
+           dnacopy_seed = 1,
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
@@ -80,7 +82,7 @@ conumee_pipe <-
           tictoc::tic()
         }
         cnv_res <-
-          conumee_analysis(cnv_dat[nm], cnv_dat[ref_samples], anno = cnv_anno)
+          conumee_analysis(cnv_dat[nm], cnv_dat[ref_samples], anno = cnv_anno, seed = dnacopy_seed)
         if (verbose) tictoc::toc()
         cnv_res
       })
@@ -137,16 +139,18 @@ conumee_pipe <-
 #' @param intercept A logical scalar setting the \code{intercept} argument of
 #'    \code{\link[conumee]{CNV.fit}}. Should intercept be considered? Defaults
 #'    to TRUE.
+#' @param seed An integer scalar to set the seed. Default to 1.
 #' @param ... Any arguments passed to \code{\link[conumee]{CNV.segment}}.
 #' @return An object of \code{\link[conumee]{CNV.analysis-class}}.
 #' @export
-conumee_analysis <- function(query, ref, anno, intercept = TRUE, ...) {
+conumee_analysis <- function(query, ref, anno, intercept = TRUE, seed = 1, ...) {
   conumee::CNV.fit(
     query = query,
     ref = ref,
     anno = anno) %>%
     conumee::CNV.bin() %>%
-    conumee::CNV.detail() %>%
-    conumee::CNV.segment(...)
+    conumee::CNV.detail() -> cnv_anl
+  set.seed(seed)
+  conumee::CNV.segment(cnv_anl, ...)
 }
 
