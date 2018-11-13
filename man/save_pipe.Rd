@@ -5,6 +5,7 @@
 \alias{save_pipe}
 \alias{save_pipe,ConumeePipe-method}
 \alias{save_pipe,MethylCNVPipe-method}
+\alias{save_pipe,CwobPipe-method}
 \title{Save an object of pipeline classes.}
 \usage{
 save_pipe(x, outdir, filename, overwrite = FALSE, verbose = TRUE, ...)
@@ -14,6 +15,9 @@ save_pipe(x, outdir, filename, overwrite = FALSE, verbose = TRUE, ...)
 
 \S4method{save_pipe}{MethylCNVPipe}(x, outdir,
   filename = "methylcnv.Rda", overwrite = FALSE, verbose = TRUE)
+
+\S4method{save_pipe}{CwobPipe}(x, outdir, filename = "cwob.Rda",
+  overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{An object.}
@@ -39,5 +43,7 @@ Save an object of pipeline classes.
 \item \code{ConumeePipe}: x is \code{ConumeePipe}.
 
 \item \code{MethylCNVPipe}: x is \code{MethylCNVPipe}.
+
+\item \code{CwobPipe}: x is \code{CwobPipe}.
 }}
 

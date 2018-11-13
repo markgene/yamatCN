@@ -4,7 +4,7 @@
 \alias{conumee_analysis}
 \title{Main Conumee CNV analysis}
 \usage{
-conumee_analysis(query, ref, anno, intercept = TRUE, ...)
+conumee_analysis(query, ref, anno, intercept = TRUE, seed = 1, ...)
 }
 \arguments{
 \item{query}{A \code{\link[conumee]{CNV.data-class}} object of query sample
@@ -19,6 +19,8 @@ to create.}
 \item{intercept}{A logical scalar setting the \code{intercept} argument of
 \code{\link[conumee]{CNV.fit}}. Should intercept be considered? Defaults
 to TRUE.}
+
+\item{seed}{An integer scalar to set the seed. Default to 1.}
 
 \item{...}{Any arguments passed to \code{\link[conumee]{CNV.segment}}.}
 }
