@@ -32,21 +32,47 @@ setMethod(
                         filename = "conumee.Rda",
                         overwrite = FALSE,
                         verbose = TRUE) {
-    sample_dirs <- yamat::init_report(x@dat$minfi_obj, outdir)
-    qry_names <-
-      .query_sample_names(x@dat$minfi_obj, label = "query")
-    sapply(seq(length(qry_names)),
-           function(i) {
-             cnv_anl_obj <- x@dat$conumee_results[[qry_names[i]]]
-             minfi_obj <- x@dat$minfi_obj[, i]
-             filename <- file.path(sample_dirs[i], filename)
-             if (overwrite | !file.exists(filename)) {
-               save(cnv_anl_obj, minfi_obj, file = filename)
-             } else {
-               if (verbose)
-                 message("File exists. Skip.")
-             }
-             filename
-           })
+    .save_pipe(x,
+               outdir,
+               filename = filename,
+               overwrite = overwrite,
+               verbose = verbose)
   }
 )
+
+
+#' @describeIn save_pipe x is \code{MethylCNVPipe}.
+setMethod(
+  f = "save_pipe",
+  signature = c(x = "MethylCNVPipe"),
+  definition = function(x,
+                        outdir,
+                        filename = "methylcnv.Rda",
+                        overwrite = FALSE,
+                        verbose = TRUE) {
+    .save_pipe(x,
+               outdir,
+               filename = filename,
+               overwrite = overwrite,
+               verbose = verbose)
+  }
+)
+
+
+.save_pipe <- function(x, outdir, filename, overwrite = FALSE, verbose = TRUE) {
+  if (missing(x))
+    stop("Require argument x")
+  if (missing(outdir))
+    stop("Require argument outdir")
+  if (missing(filename))
+    stop("Require argument filename")
+  if (!dir.exists(outdir))
+    dir.create(outdir, recursive = TRUE)
+  filename <- file.path(outdir, filename)
+  if (overwrite | !file.exists(filename)) {
+    save(x, file = filename)
+  } else {
+    if (verbose)
+      message("File exists. Skip.")
+  }
+}
