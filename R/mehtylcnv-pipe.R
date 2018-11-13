@@ -14,7 +14,8 @@
 #'   \code{\link[minfi]{RGChannelSet-class}}.
 #' @param report_dir A character scalar of reporting.
 #' @param norm_method A character scalar of method, including raw, illumina,
-#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to "swan".
+#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to
+#'   "methylcnv".
 #' @param batch factor or vector indicating batches. Default to \code{NULL}, -
 #'   do not remove batch effect.
 #' @param batch2 optional factor or vector indicating a second series of
@@ -37,10 +38,10 @@ methylcnv_pipe <-
   function(ref,
            qry,
            report_dir,
-           norm_method = c("swan", "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz"),
+           norm_method = c("methylcnv", "swan", "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz"),
            batch = NULL,
            batch2 = NULL,
-           pipe_file = "conumee.Rda",
+           pipe_file = "methylCNV.Rda",
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.

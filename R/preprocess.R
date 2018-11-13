@@ -11,7 +11,8 @@
 #' @param qry Query samples stored in an object of
 #'   \code{\link[minfi]{RGChannelSet-class}}.
 #' @param norm_method A character scalar of method, including raw, illumina,
-#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to "swan".
+#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile, methylcnv. Default
+#'   to "swan".
 #' @param batch factor or vector indicating batches. Default to \code{NULL}, -
 #'   do not remove batch effect.
 #' @param batch2 optional factor or vector indicating a second series of
@@ -29,7 +30,7 @@
 preprocess <-
   function(ref,
            qry,
-           norm_method = c("swan", "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz"),
+           norm_method = c("swan", "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz", "methylcnv"),
            batch = NULL,
            batch2 = NULL,
            overwrite = FALSE,
@@ -49,7 +50,7 @@ preprocess <-
       tictoc::tic()
     }
     x <- .combine(ref = ref, qry = qry, batch = batch, batch2 = batch2) %>%
-      yamat::normalize(., norm_method = norm_method)
+      yamat::normalize(rgset = ., norm_method = norm_method)
     if (verbose) tictoc::toc()
     # Remove batch effects
     if (!is.null(batch)) {
@@ -71,7 +72,7 @@ preprocess <-
 #' @param qry Query samples stored in an object of
 #'   \code{\link[minfi]{RGChannelSet-class}}.
 #' @param norm_method A character scalar of method, including raw, illumina,
-#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile.
+#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile, methylcnv.
 #' @param batch factor or vector indicating batches.
 #' @param batch2 optional factor or vector indicating a second series of
 #'   batches.
@@ -99,7 +100,8 @@ preprocess <-
         "swan",
         "noob",
         "funnorm",
-        "quantile")
+        "quantile",
+        "methylcnv")
     if (!all(norm_method %in% norm_methods))
       stop("Invalid norm_method!")
     # If batch and batch2 are in phenotype information?
