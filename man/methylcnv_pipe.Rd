@@ -19,7 +19,7 @@ methylcnv_pipe(ref, qry, report_dir, norm_method = c("methylcnv", "swan",
 \item{report_dir}{A character scalar of reporting.}
 
 \item{norm_method}{A character scalar of method, including raw, illumina,
-swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to
+swan, quantile, noob, funnorm, yamat, dkfz, methylcnv. Default to
 "methylcnv".}
 
 \item{batch}{factor or vector indicating batches. Default to \code{NULL}, -
