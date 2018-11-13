@@ -210,3 +210,16 @@ create_dnacopy_cna <- function(x, lrr, verbose = TRUE) {
 }
 
 
+#' Summarize \code{DNAcopy} segments.
+#'
+#' @param x A \code{\link[DNAcopy]{DNAcopy}} object.
+#' @param ... Arugments passed to \code{\link[DNAcopy]{segment.p}}.
+#' @return A \code{data.frame}.
+#' @export
+summarize_dnacopy_segments <- function(x, ...) {
+  summary_df <- DNAcopy::segments.summary(x)
+  pval_df <- DNAcopy::segments.p(x)
+  cbind(summary_df, pval_df[, c("bstat", "pval")])
+}
+
+
