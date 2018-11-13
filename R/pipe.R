@@ -186,3 +186,31 @@ get_influential_loci <- function(x, threshold = 4, verbose = TRUE) {
     })
   unique(do.call(c, influential_list))
 }
+
+
+#' Calculate LRR shift.
+#'
+#' LRR are shifted to minimize the median absolute deviation from all markers to
+#' zero to determine the copy-number neutral state. The function is a wrapper
+#' of \code{\link[stats]{optim}}. See the manual of \code{\link[stats]{optim}}
+#' for more information about the arguments.
+#'
+#' @param lrr A matrix of LRR.
+#' @param method A character scalar of the method to be used.
+#' @param lower A numeric scalar. Default to -100.
+#' @param upper A numeric scalar. Default to 100.
+#' @param ... Arguments passed to \code{\link[stats]{optim}}.
+#' @return A numeric scalar of shift.
+#' @note I borrow the code from \code{\link[conumee]{CNV.bin}} package.
+#' @noRd
+.cal_lrr_shift <- function(lrr, method = "Brent", lower = -100, upper = 100, ...) {
+  optim(
+    par = 0,
+    fn = function(s)
+      median(abs(lrr - s), na.rm = TRUE),
+    method = method,
+    lower = lower,
+    upper = upper,
+    ...
+  )$par
+}
