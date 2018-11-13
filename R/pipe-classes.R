@@ -92,3 +92,25 @@ MethylCNVPipe <- setClass(
   contains = "Pipe"
 )
 
+
+#' CwobPipe pipeline
+#'
+#' @slot dat An environment which has the following objects:
+#' \itemize{
+#'   \item \code{minfi_obj}: an object of
+#'     \code{\link[minfi]{GenomicRatioSet-class}} or
+#'     \code{\link[minfi]{GenomicMethylSet-class}}.
+#'   \item \code{dnacopy_obj} an object of \code{\link[DNAcopy]{DNAcopy}} class.
+#'   \item \code{segments} a \code{data.frame} of segments.
+#'   \item \code{lrr_shift} a numeric scalar. LRR is shifted to minimize the
+#'     median absolute deviation from all bins to zero to determine the
+#'     copy-number neutral state.
+#' }
+#' @slot meta A list contain meta information.
+#' @export
+CwobPipe <- setClass(
+  "CwobPipe",
+  slots = c(dat = "environment", meta = "list"),
+  contains = "Pipe"
+)
+
