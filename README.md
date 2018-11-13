@@ -5,6 +5,15 @@ analysis.
 
 ## Quick Start
 
+Install.
+
+```{r, install_yamatcn}
+if (! ("devtools" %in% installed.packages()) install.packages("devtools")
+devtools::install_github("markgene/yamatCN")
+```
+
+Prepare the data.
+
 ```{r prep}
 library(yamatCN)
 library(minfiData)
