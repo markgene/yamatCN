@@ -59,6 +59,24 @@ setMethod(
 )
 
 
+#' @describeIn save_pipe x is \code{CwobPipe}.
+setMethod(
+  f = "save_pipe",
+  signature = c(x = "CwobPipe"),
+  definition = function(x,
+                        outdir,
+                        filename = "cwob.Rda",
+                        overwrite = FALSE,
+                        verbose = TRUE) {
+    .save_pipe(x,
+               outdir,
+               filename = filename,
+               overwrite = overwrite,
+               verbose = verbose)
+  }
+)
+
+
 .save_pipe <- function(x, outdir, filename, overwrite = FALSE, verbose = TRUE) {
   if (missing(x))
     stop("Require argument x")
