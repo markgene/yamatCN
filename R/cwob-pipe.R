@@ -20,6 +20,7 @@
 #' @param pipe_file A character scalar of the filename storing the pipeline
 #'   result sample by sample. Default to "cwob.Rda". Turn off the saving by
 #'   set it to NULL.
+#' @param dnacopy_seed An integer scalar to set the seed. Default to 1.
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @return An object of \code{\link{CwobPipe}} class.
@@ -36,6 +37,7 @@ cwob_pipe <-
            batch = NULL,
            batch2 = NULL,
            pipe_file = "cwob.Rda",
+           dnacopy_seed = 1,
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
@@ -76,7 +78,13 @@ cwob_pipe <-
       message("Segmentation with DNAcopy...")
       tictoc::tic()
     }
-    dnacopy_obj <- dnacopy_analysis.yamat(x = x[, qry_idx], lrr = lrr, seed = 1, verbose = verbose)
+    dnacopy_obj <-
+      dnacopy_analysis.yamat(
+        x = x[, qry_idx],
+        lrr = lrr,
+        seed = dnacopy_seed,
+        verbose = verbose
+      )
     if (verbose) tictoc::toc()
     # Summarize DNAcopy analysis
     if (verbose) {
