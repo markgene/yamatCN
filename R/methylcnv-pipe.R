@@ -75,5 +75,27 @@ methylcnv_pipe <-
         reference = minfi::getCN(x[, ref_idx]),
         method = "mean"
       )
+    if (verbose) tictoc::toc()
     # DNAcopy
+    if (verbose) {
+      message("Segmentation with DNAcopy...")
+      tictoc::tic()
+    }
+    dnacopy_obj <- dnacopy_analysis.default(x = x[, qry_idx], lrr = lrr, seed = 1, verbose = verbose)
+    dnacopy_segment_summary <- summarize_dnacopy_segments(dnacopy_obj)
+    if (verbose) tictoc::toc()
+    # Create MethylCNVPipe object
+    dat <- new.env(parent = parent.frame())
+    dat$dnacopy_obj <- dnacopy_obj
+    dat$minfi_obj <- x
+    dat$segments <- dnacopy_segment_summary
+    pipe_obj <- MethylCNVPipe(dat = dat)
+    # Save the result
+    if (is.null(pipe_file)) {
+      if (verbose)
+        message("Skip saving the pipeline result sample by sample.")
+    } else {
+      save_pipe(pipe_obj, outdir = report_dir, filename = pipe_file)
+    }
+    pipe_obj
   }
