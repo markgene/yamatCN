@@ -166,3 +166,47 @@ dnacopy_analysis.yamat <- function(x, lrr, seed = 1, verbose = TRUE) {
     verbose = verbose
   )
 }
+
+
+#' Create \code{\link[DNAcopy]{CNA}} object.
+#'
+#' @param x A \code{minfi} object such as
+#'   \code{\link[minfi]{RGChannelSet-class}} or
+#'   \code{\link[minfi]{MethylSet-class}} or
+#'   \code{\link[minfi]{GenomicMethylSet-class}} or
+#'   \code{\link[minfi]{GenomicRatioSet-class}}.
+#' @param lrr A matrix of log2 transformed ratio of query and reference copy
+#'   number (sum of methylation and unmethylation signals).
+#' @param verbose A logical scalar. Default to TRUE.
+#' @return A \code{\link[DNAcopy]{CNA}} object.
+#' @export
+create_dnacopy_cna <- function(x, lrr, verbose = TRUE) {
+  if (missing(x))
+    stop("Require argument x")
+  if (missing(lrr))
+    stop("Require argument lrr")
+  # Get loci information
+  if (verbose) {
+    message("Getting loci information...")
+    tictoc::tic()
+  }
+  anno <- minfi::getAnnotation(x, lociNames = rownames(lrr))
+  if (verbose) tictoc::toc()
+  # Create CNA object.
+  if (verbose) {
+    message("Creating CNA object...")
+    tictoc::tic()
+  }
+  cna_obj <- DNAcopy::CNA(
+    genomdat = lrr[rownames(anno),],
+    chrom = anno$chr,
+    maploc = anno$pos,
+    data.type = "logratio",
+    sampleid = colnames(lrr),
+    presorted = FALSE
+  )
+  if (verbose) tictoc::toc()
+  cna_obj
+}
+
+
