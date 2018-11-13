@@ -3,9 +3,53 @@
 The package is part of [yamat ecosystem for methylation array data analysis](https://github.com/markgene/yamat). It focuses on copy-number 
 analysis.
 
-## Introduction
+## Quick Start
 
-TBA.
+```{r prep}
+library(yamatCN)
+library(minfiData)
+
+ref <- RGsetEx[, 1:3]
+qry <- RGsetEx[, 4:6]
+report_dir <- tempdir()
+```
+
+Conumee pipeline:
+
+```{r conumee}
+conumee_pipe(
+  ref = ref,
+  qry = qry,
+  report_dir = report_dir,
+  norm_method = "swan"
+) -> conumee_result
+```
+
+MethylCNV pipeline:
+
+```{r methylcnv}
+methylcnv_pipe(
+  ref = ref,
+  qry = qry,
+  report_dir = report_dir,
+  norm_method = "methylcnv"
+) -> methylcnv_result
+```
+
+Conumee without binning (CWOB) pipeline:
+
+```{r cwob}
+cwob_pipe(
+  ref = ref,
+  qry = qry,
+  report_dir = report_dir,
+  norm_method = "yamat",
+  batch = NULL,
+  batch2 = NULL
+) -> cwob_result
+```
+
+Known batch effect can be removed by setting `batch` and `batch2` arguments.
 
 ## Appendix: CNV Pipelines in Papers and Bioconductor
 
