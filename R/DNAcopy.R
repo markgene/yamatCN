@@ -219,7 +219,7 @@ create_dnacopy_cna <- function(x, lrr, verbose = TRUE) {
 #' @export
 summarize_dnacopy_segments <- function(x, ...) {
   summary_df <- DNAcopy::segments.summary(x)
-  pval_df <- DNAcopy::segments.p(x)
+  pval_df <- DNAcopy::segments.p(x, ...)
   cbind(summary_df, pval_df[, c("bstat", "pval")])
 }
 
