@@ -14,7 +14,7 @@
 #'   \code{\link[minfi]{RGChannelSet-class}}.
 #' @param report_dir A character scalar of reporting.
 #' @param norm_method A character scalar of method, including raw, illumina,
-#'   swan, quantile, noob, funnorm, yamat, dkfz, quantile. Default to
+#'   swan, quantile, noob, funnorm, yamat, dkfz, methylcnv. Default to
 #'   "methylcnv".
 #' @param batch factor or vector indicating batches. Default to \code{NULL}, -
 #'   do not remove batch effect.
@@ -93,7 +93,7 @@ methylcnv_pipe <-
     # Save the result
     if (is.null(pipe_file)) {
       if (verbose)
-        message("Skip saving the pipeline result sample by sample.")
+        message("Skip saving the pipeline.")
     } else {
       save_pipe(pipe_obj, outdir = report_dir, filename = pipe_file)
     }
