@@ -125,8 +125,7 @@ dnacopy_analysis.conumee <- function(x, lrr, seed = 1, verbose = TRUE) {
     trim = 0.025,
     undo.splits = "sdundo",
     undo.prune = 0.05,
-    undo.SD = 2.2,
-    verbose = verbose
+    undo.SD = 2.2
   )
 }
 
@@ -164,8 +163,7 @@ dnacopy_analysis.yamat <- function(x, lrr, seed = 1, verbose = TRUE) {
     trim = 0.025,
     undo.splits = "sdundo",
     undo.prune = 0.05,
-    undo.SD = 3,
-    verbose = verbose
+    undo.SD = 3
   )
 }
 
