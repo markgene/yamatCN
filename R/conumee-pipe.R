@@ -77,7 +77,7 @@ conumee_pipe <-
   } else if (inherits(x, "GenomicMethylSet")) {
     cnv_dat <-
       minfi::ratioConvert(x) %>%
-      conumee::CNV.load()
+      conumee::CNV.load(., names = minfi::sampleNames(x))
   } else {
     stop(
       "Invalid class. Require GenomicRatioSet or GenomicMethylSet, but ",
