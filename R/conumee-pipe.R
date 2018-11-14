@@ -37,7 +37,8 @@ conumee_pipe <-
            pipe_file = "conumee.Rda",
            dnacopy_seed = 1,
            overwrite = FALSE,
-           verbose = TRUE) {
+           verbose = TRUE,
+           ...) {
     # Check arguments.
     .check_args_pipe(report_dir = report_dir)
     # Preprocess.
@@ -52,56 +53,15 @@ conumee_pipe <-
         verbose = verbose
       )
     # Run Conumee-based CNV analysis
-    # Create Conumee annotation.
-    if (verbose) {
-      message("Preparing CNV analysis: annotation...")
-      tictoc::tic()
-    }
-    cnv_anno <- CNV.create_anno.yamat(x, detail_regions_preset = "conumee")
-    if (verbose) tictoc::toc()
-    # Load data to Conumee.
-    if (verbose) {
-      message("Preparing CNV analysis: loading data...")
-      tictoc::tic()
-    }
-    cnv_dat <- .CNV_load(x)
-    if (verbose) tictoc::toc()
-    # Main Conumee CNV analysis.
-    if (verbose) {
-      message("Running CNV analysis: main analysis...")
-      tictoc::tic()
-    }
-    ref_samples <- .reference_sample_names(x, label = "ref")
-    qry_samples <- .query_sample_names(x, label = "query")
-    cnv_results <- lapply(
-      qry_samples,
-      function(nm) {
-        i <- which(qry_samples == nm)
-        if (verbose) {
-          message("Run CNV for sample ", "(", i, "/", length(qry_samples), "): ", nm)
-          tictoc::tic()
-        }
-        cnv_res <-
-          conumee_analysis(cnv_dat[nm], cnv_dat[ref_samples], anno = cnv_anno, seed = dnacopy_seed)
-        if (verbose) tictoc::toc()
-        cnv_res
-      })
-    if (verbose) tictoc::toc()
-    # Create ConumeePipe object
-    dat <- new.env(parent = parent.frame())
-    dat$conumee_results <- cnv_results
-    dat$minfi_obj <- x
-    dat$batch <- batch
-    dat$batch2 <- batch2
-    cp_obj <- ConumeePipe(dat = dat)
-    # Save the result
-    if (is.null(pipe_file)) {
-      if (verbose)
-        message("Skip saving the pipeline result sample by sample.")
-    } else {
-      save_pipe(cp_obj, outdir = report_dir, filename = pipe_file)
-    }
-    cp_obj
+    conumee_backbone(
+      x = x,
+      report_dir = report_dir,
+      pipe_file = pipe_file,
+      dnacopy_seed = dnacopy_seed,
+      overwrite = overwrite,
+      verbose = verbose,
+      ...
+    )
   }
 
 
