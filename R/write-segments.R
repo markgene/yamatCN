@@ -32,7 +32,21 @@ setMethod(
                         filename = "conumee-segments.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {
-
+    query_idx <- .query_indices(x@dat$minfi_obj)
+    sample_dirs <- yamat::init_report(x@dat$minfi_obj[, query_idx], report_dir = outdir)
+    if (length(x@dat$conumee_results) != length(query_idx))
+      stop("Number of query samples are not the same in Conumee report and minfi object.")
+    sapply(
+      seq(length(query_idx)),
+      function(i) {
+        .write_conumee_result(
+          cnv_anl = x@dat$conumee_results[[i]],
+          outdir = sample_dirs[i],
+          prefix = "",
+          overwrite = overwrite
+        )
+      }
+    )
   }
 )
 
