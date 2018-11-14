@@ -158,6 +158,7 @@ preprocess <-
   # Add ref_query column
   qry_df$ref_query <- "query"
   ref_df$ref_query <- "ref"
+  common_colnames <- colnames(qry_df)[colnames(qry_df) %in% colnames(ref_df)]
   # Distinguish NAs from query and reference if batch and batch2 are set.
   if (!is.null(batch)) {
     if (!batch %in% common_colnames)
