@@ -62,8 +62,6 @@ setMethod(
 #'     \code{\link[minfi]{GenomicRatioSet-class}} or
 #'     \code{\link[minfi]{GenomicMethylSet-class}}.
 #'   \item \code{conumee_results}: a list of \code{\link[conumee]{CNV.analysis-class}}.
-#'   \item \code{batch}: a character scalar of batch.
-#'   \item \code{batch2}: a character scalar of batch2.
 #' }
 #' @slot meta A list contain meta information.
 #' @export
