@@ -10,7 +10,7 @@ Description: The package is used to perform copy number analysis with 850K/EPIC
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
     magrittr (>= 1.5),
     tictoc (>= 1.0),
     minfi (>= 1.27.0),
@@ -18,7 +18,7 @@ Imports:
     yamat (>= 0.0.0.9004),
     DNAcopy (>= 1.55.0)
 RoxygenNote: 6.1.0
-Suggests: 
+Suggests:
     testthat (>= 2.0.0),
     minfiData (>= 0.27.0),
     GenomeInfoDb (>= 1.17.3),
@@ -29,4 +29,7 @@ Suggests:
     IlluminaHumanMethylationEPICanno.ilm10b2.hg19 (>= 0.6.0),
     IlluminaHumanMethylationEPICanno.ilm10b3.hg19 (>= 0.6.0),
     IlluminaHumanMethylationEPICanno.ilm10b4.hg19 (>= 0.6.0),
-    IlluminaHumanMethylationEPICmanifest (>= 0.3.0)
+    IlluminaHumanMethylationEPICmanifest (>= 0.3.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
