@@ -163,21 +163,23 @@ conumee_backbone <- function(x,
     message("Running CNV analysis: main analysis...")
     tictoc::tic()
   }
-  ref_samples <- .reference_sample_names(x, label = "ref")
-  qry_samples <- .query_sample_names(x, label = "query")
+  ref_idx <- .reference_indices(x, label = "ref")
+  qry_idx <- .query_indices(x, label = "query")
   cnv_results <- lapply(
-    qry_samples,
-    function(nm) {
-      i <- which(qry_samples == nm)
+    qry_idx,
+    function(idx) {
+      i <- which(qry_idx == idx)
+      nm <- minfi::sampleNames(x)[idx]
       if (verbose) {
-        message("Run CNV for sample ", "(", i, "/", length(qry_samples), "): ", nm)
+        message("Run CNV for sample ", "(", i, "/", length(qry_idx), "): ", nm)
         tictoc::tic()
       }
       cnv_res <-
-        conumee_analysis(cnv_dat[nm], cnv_dat[ref_samples], anno = cnv_anno, seed = dnacopy_seed, ...)
+        conumee_analysis(cnv_dat[i], cnv_dat[ref_idx], anno = cnv_anno, seed = dnacopy_seed, ...)
       if (verbose) tictoc::toc()
       cnv_res
     })
+  names(cnv_results) <- minfi::sampleNames(x)[qry_idx]
   if (verbose) tictoc::toc()
   # Create ConumeePipe object
   dat <- new.env(parent = parent.frame())
