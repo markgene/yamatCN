@@ -1,7 +1,7 @@
 context("Test tuning Conumee pipeline")
 library(yamatCN)
 
-skip_flag <- FALSE
+skip_flag <- TRUE
 
 library(minfiData)
 ref <- RGsetEx[, 1:3]
