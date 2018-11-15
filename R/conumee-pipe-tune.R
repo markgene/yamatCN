@@ -24,6 +24,8 @@
 #'   result sample by sample. Turn off the saving by set it to \code{NULL}.
 #'   Default to \code{NULL}.
 #' @param dnacopy_seed An integer scalar to set the seed. Default to 1.
+#' @param segment_grid A \code{data.frame} of parameters for \code{\link[conumee]{CNV.segment}}.
+#'   If it is not set, generate one use \code{\link{.conumee_segment_grid}}.
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Any arguments passed to \code{\link[conumee]{CNV.segment}}.
@@ -46,6 +48,7 @@ tune_conumee_pipe <-
            batch2 = NULL,
            pipe_file = NULL,
            dnacopy_seed = 1,
+           segment_grid,
            overwrite = FALSE,
            verbose = TRUE,
            ...) {
@@ -54,7 +57,8 @@ tune_conumee_pipe <-
     # Batch grid
     batch_grid <- .batch_grid(batch, batch2)
     # Segment grid
-    segment_grid <- .conumee_segment_grid()
+    if (missing(segment_grid))
+      segment_grid <- .conumee_segment_grid()
     # Search grid
     lapply(
       norm_methods,
@@ -119,7 +123,7 @@ tune_conumee_pipe <-
 
 
 .conumee_segment_grid <-
-  function(alpha = c(0.001, 0.005, 0.01),
+  function(alpha = c(0.001),
            min.width = c(2, 3, 4, 5),
            undo.SD = seq(from = 2, to = 3, by = 0.1)) {
     expand.grid(
