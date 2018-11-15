@@ -7,7 +7,8 @@
 tune_conumee_pipe(ref, qry, report_dir, norm_methods = c("swan",
   "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz",
   "methylcnv"), batch = NULL, batch2 = NULL, pipe_file = NULL,
-  dnacopy_seed = 1, overwrite = FALSE, verbose = TRUE, ...)
+  dnacopy_seed = 1, segment_grid, overwrite = FALSE, verbose = TRUE,
+  ...)
 }
 \arguments{
 \item{ref}{Reference samples stored in an object of
@@ -33,6 +34,9 @@ result sample by sample. Turn off the saving by set it to \code{NULL}.
 Default to \code{NULL}.}
 
 \item{dnacopy_seed}{An integer scalar to set the seed. Default to 1.}
+
+\item{segment_grid}{A \code{data.frame} of parameters for \code{\link[conumee]{CNV.segment}}.
+If it is not set, generate one use \code{\link{.conumee_segment_grid}}.}
 
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
