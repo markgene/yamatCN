@@ -97,6 +97,7 @@ methylcnv_pipe <-
     dat$dnacopy_obj <- dnacopy_obj
     dat$minfi_obj <- x
     dat$segments <- dnacopy_segment_summary
+    dat$lrr <- lrr
     pipe_obj <- MethylCNVPipe(dat = dat)
     # Save the result
     if (is.null(pipe_file)) {

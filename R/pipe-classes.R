@@ -81,6 +81,7 @@ ConumeePipe <- setClass(
 #'     \code{\link[minfi]{GenomicMethylSet-class}}.
 #'   \item \code{dnacopy_obj} an object of \code{\link[DNAcopy]{DNAcopy}} class.
 #'   \item \code{segments} a \code{data.frame} of segments.
+#'   \item \code{lrr} A \code{matrix} of LRR.
 #' }
 #' @slot meta A list contain meta information.
 #' @export
@@ -100,6 +101,7 @@ MethylCNVPipe <- setClass(
 #'     \code{\link[minfi]{GenomicMethylSet-class}}.
 #'   \item \code{dnacopy_obj} an object of \code{\link[DNAcopy]{DNAcopy}} class.
 #'   \item \code{segments} a \code{data.frame} of segments.
+#'   \item \code{lrr} A \code{matrix} of LRR.
 #'   \item \code{lrr_shift} a numeric scalar. LRR is shifted to minimize the
 #'     median absolute deviation from all bins to zero to determine the
 #'     copy-number neutral state.

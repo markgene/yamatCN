@@ -99,6 +99,7 @@ cwob_pipe <-
     dat$minfi_obj <- x
     dat$segments <- dnacopy_segment_summary
     dat$lrr_shift <- lrr_shift
+    dat$lrr <- lrr
     pipe_obj <- CwobPipe(dat = dat)
     # Save the result
     if (is.null(pipe_file)) {
