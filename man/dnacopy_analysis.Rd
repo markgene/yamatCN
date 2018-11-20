@@ -23,7 +23,11 @@ number (sum of methylation and unmethylation signals).}
 \item{...}{Arugments passed to \code{\link[DNAcopy]{segment}}.}
 }
 \value{
-A \code{\link[DNAcopy]{DNAcopy}} object.
+A list of two element:
+  \itemize{
+    \item \code{DNAcopy} a \code{\link[DNAcopy]{DNAcopy}} object.
+    \item \code{CNA} a code{\link[DNAcopy]{CNA}} object (not smoothed).
+  }
 }
 \description{
 Run DNAcopy analysis.
