@@ -94,8 +94,8 @@ methylcnv_pipe <-
     if (verbose) tictoc::toc()
     # Create MethylCNVPipe object
     dat <- new.env(parent = parent.frame())
-    dat$dnacopy_obj <- dnacopy_obj
-    dat$minfi_obj <- x
+    dat$dnacopy <- dnacopy_obj
+    dat$minfi <- x
     dat$segments <- dnacopy_segment_summary
     dat$lrr <- lrr
     pipe_obj <- MethylCNVPipe(dat = dat)
