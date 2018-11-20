@@ -13,18 +13,24 @@
 #' @param seed An integer scalar to set the seed. Default to 1.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Arugments passed to \code{\link[DNAcopy]{segment}}.
-#' @return A \code{\link[DNAcopy]{DNAcopy}} object.
+#' @return A list of two element:
+#'   \itemize{
+#'     \item \code{DNAcopy} a \code{\link[DNAcopy]{DNAcopy}} object.
+#'     \item \code{CNA} a code{\link[DNAcopy]{CNA}} object (not smoothed).
+#'   }
 #' @details The function provides a template of run DNAcopy analysis. There are
 #'   many parameters in smoothing and segmentation. The function uses the
 #'   default settings for smoothing.
 #' @export
 dnacopy_analysis <- function(x, lrr, seed = 1, verbose = TRUE, ...) {
+  output <- list()
   # Creating DNAcopy CNA object.
   if (verbose) {
     message("Creating DNAcopy CNA object...")
     tictoc::tic()
   }
   cna_obj <- create_dnacopy_cna(x, lrr)
+  output$CNA <- cna_obj
   if (verbose) tictoc::toc()
   # Smooth
   if (verbose) {
@@ -47,9 +53,9 @@ dnacopy_analysis <- function(x, lrr, seed = 1, verbose = TRUE, ...) {
   }
   segment_verbose <- 1
   set.seed(seed)
-  dnacopy_obj <- DNAcopy::segment(cna_obj, verbose = segment_verbose, ...)
+  output$DNAcopy <- DNAcopy::segment(cna_obj, verbose = segment_verbose, ...)
   if (verbose) tictoc::toc()
-  dnacopy_obj
+  output
 }
 
 

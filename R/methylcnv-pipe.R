@@ -90,7 +90,7 @@ methylcnv_pipe <-
         seed = dnacopy_seed,
         verbose = verbose
       )
-    dnacopy_segment_summary <- summarize_dnacopy_segments(dnacopy_obj)
+    dnacopy_segment_summary <- summarize_dnacopy_segments(dnacopy_obj$DNAcopy)
     if (verbose) tictoc::toc()
     # Create MethylCNVPipe object
     dat <- new.env(parent = parent.frame())
