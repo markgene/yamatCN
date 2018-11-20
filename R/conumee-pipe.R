@@ -191,7 +191,13 @@ conumee_backbone <- function(x,
     if (verbose)
       message("Skip saving the pipeline result sample by sample.")
   } else {
-    save_pipe(cp_obj, outdir = report_dir, filename = pipe_file)
+    save_pipe(
+      cp_obj,
+      outdir = report_dir,
+      filename = pipe_file,
+      overwrite = overwrite,
+      verbose = verbose
+    )
   }
   cp_obj
 }

@@ -104,7 +104,13 @@ methylcnv_pipe <-
       if (verbose)
         message("Skip saving the pipeline.")
     } else {
-      save_pipe(pipe_obj, outdir = report_dir, filename = pipe_file)
+      save_pipe(
+        pipe_obj,
+        outdir = report_dir,
+        filename = pipe_file,
+        overwrite = overwrite,
+        verbose = verbose
+      )
     }
     pipe_obj
   }
