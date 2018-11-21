@@ -1,6 +1,6 @@
 # Report pipeline methods.
 
-#' Save an object of pipeline classes.
+#' Report an object of pipeline classes.
 #'
 #' @param x An object.
 #' @param outdir A character scalar of output directory.
