@@ -1,5 +1,14 @@
 # Plot CNVs.
 
+#' Genome plot for single sample.
+#' @noRd
+.plot_genome_single_sample <- function(x, sample_id, gender = c("M", "F"), chr_per_row = 4) {
+  dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
+  cnView(dat$lrr, z = dat$z, chr = "all", genome = "hg19", CNscale = "absolute") +
+    ggplot2::facet_wrap(~chromosome, scales = "free_x", ncol = chr_per_row)
+}
+
+
 .plot_single_sample_prep <- function(x, sample_id, gender = c("M", "F")) {
   if (!gender %in% c("M", "F")) {
     stop("Argument gender should be either M or F.")
