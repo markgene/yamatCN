@@ -9,6 +9,44 @@
 }
 
 
+#' Plot chromosomes for single sample.
+#' @noRd
+.plot_chromosomes_single_sample <-
+  function(x,
+           sample_id,
+           gender = c("M", "F"),
+           size = 5e6,
+           cn_boundary = c(1.5, 2.5),
+           verbose = TRUE) {
+    dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
+    dat$z %>%
+      dplyr::filter(end - start + 1 > size) %>%
+      dplyr::filter(segmean > cn_boundary[2] | segmean < cn_boundary[1]) %>%
+      dplyr::select(chromosome) %>%
+      dplyr::distinct() %>%
+      unlist() -> sele_chr
+    plot_lst <- list()
+    if (length(sele_chr)) {
+      lapply(sele_chr, function(chr) {
+        if (verbose)
+          message("Plotting chromosome ", chr)
+        cnView(
+          dat$lrr,
+          z = dat$z,
+          chr = chr,
+          genome = "hg19",
+          CNscale = "absolute"
+        )
+      }) -> plot_lst
+      names(plot_lst) <- sele_chr
+    }
+    plot_lst
+    # list(plots = plot_lst, chr = sele_chr)
+  }
+
+
+#' Prepare for the data of a single sample.
+#' @noRd
 .plot_single_sample_prep <- function(x, sample_id, gender = c("M", "F")) {
   if (!inherits(x, "CwobPipe") & !inherits(x, "MethylCNVPipe")) {
     stop("Argument x should be an object of either CwobPipe or MethylCNVPipe class.")
