@@ -6,16 +6,46 @@
 \alias{report_pipe,CwobPipe-method}
 \title{Report an object of pipeline classes.}
 \usage{
-report_pipe(x, outdir, filename, overwrite = FALSE, verbose = TRUE,
-  ...)
+report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
+  genome_plot_width = 12, genome_plot_height = 9, chr_per_row = 4,
+  chr_plot_width = 9, chr_plot_height = 6, size = 5e+06,
+  cn_boundary = c(1.5, 2.5), overwrite = FALSE, verbose = TRUE, ...)
 
-\S4method{report_pipe}{CwobPipe}(x, outdir, overwrite = FALSE,
-  verbose = TRUE)
+\S4method{report_pipe}{CwobPipe}(x, outdir,
+  genome_plot_file = "genome-plot-cwob.png", genome_plot_width = 12,
+  genome_plot_height = 9, chr_per_row = 4, chr_plot_width = 9,
+  chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.5, 2.5),
+  overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{An object.}
 
 \item{outdir}{A character scalar of output directory.}
+
+\item{genome_plot_file}{A character scalar of the genome plot file which
+shows all chromosomes.}
+
+\item{genome_plot_width}{An integer scalar. Default to 12.}
+
+\item{genome_plot_height}{An integer scalar. Default to 9.}
+
+\item{chr_per_row}{An integer scalar of the number of chromosomes per row
+in genome plot. Default to 4.}
+
+\item{chr_plot_width}{An integer scalar of the width of individual chromosome
+plot. Default to 9.}
+
+\item{chr_plot_height}{An integer scalar of the height of individual
+chromosome plot. Default to 6.}
+
+\item{size}{An integer scalar of the threshold to define CNVs. Default to
+\code{5e6} (5 Mb).}
+
+\item{cn_boundary}{An numeric vector of length two which defines the
+boundaries to define CNVs. If a segment has a segment mean lower than
+the first element or higher than the second element, it is a CNV. It is
+the absolute value, so 2 means no copy number change. Default to
+\code{c(1.5, 2.5)}.}
 
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
