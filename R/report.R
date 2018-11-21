@@ -76,3 +76,29 @@ setMethod(
          paste0("X", sample_ids),
          sample_ids)
 }
+
+
+#' Get gender.
+#'
+#' @param minfi_obj A minfi object such as an object of
+#'     \code{\link[minfi]{GenomicRatioSet-class}} or
+#'     \code{\link[minfi]{GenomicMethylSet-class}}.
+#' @return A character vector of gender.
+#' @noRd
+.gender <- function(minfi_obj) {
+  pheno_df <- as.data.frame(minfi::pData(minfi_obj))
+  colnames(pheno_df) <- toupper(colnames(pheno_df))
+  if ("GENDER" %in% colnames(pheno_df)) {
+    gender <- pheno_df$GENDER
+  } else if ("SEX" %in% colnames(pheno_df)) {
+    gender <- pheno_df$SEX
+  } else {
+    minfi::getSex(minfi_obj, cutoff = -2) %>%
+      dplyr::select(predictedSex) %>%
+      unlist() -> gender
+  }
+  if (!all(gender %in% c("M", "F"))) {
+    stop("Require to encode gender in single character M for male or F for female.")
+  }
+  gender
+}
