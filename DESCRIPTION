@@ -1,7 +1,7 @@
 Package: yamatCN
 Type: Package
 Title: Yet Another Methylation Array Toolkit Copy Number Analysis
-Version: 0.0.0.9011
+Version: 0.0.0.9012
 Authors@R: c(
     person("Mark", "Chen", email = "mjchen.gene@gmail.com", role = "cre"))
 Maintainer: Mark J Chen <mjchen.gene@gmail.com>
@@ -16,7 +16,8 @@ Imports:
     minfi (>= 1.27.0),
     conumee (>= 1.15.0),
     yamat (>= 0.0.0.9013),
-    DNAcopy (>= 1.55.0)
+    DNAcopy (>= 1.55.0),
+    GenVisR (>= 1.15.0)
 RoxygenNote: 6.1.0
 Suggests:
     testthat (>= 2.0.0),
