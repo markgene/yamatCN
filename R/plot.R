@@ -10,6 +10,9 @@
 
 
 .plot_single_sample_prep <- function(x, sample_id, gender = c("M", "F")) {
+  if (!inherits(x, "CwobPipe") & !inherits(x, "MethylCNVPipe")) {
+    stop("Argument x should be an object of either CwobPipe or MethylCNVPipe class.")
+  }
   if (!gender %in% c("M", "F")) {
     stop("Argument gender should be either M or F.")
   }
