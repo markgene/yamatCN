@@ -1,6 +1,14 @@
 # Plot CNVs.
 
 #' Genome plot for single sample.
+#'
+#' @param x An object of \code{\link{CwobPipe}} or \code{\link{MethylCNVPipe}}
+#'   class.
+#' @param sample_id A character scalar of sample ID.
+#' @param gender A character scalar of gender. It is coded as either "M" or "F".
+#' @param chr_per_row An integer scalar of chromosome per row in the plot.
+#'   Default to 4.
+#' @return A \code{\link{ggplot2}{ggplot}} object.
 #' @noRd
 .plot_genome_single_sample <- function(x, sample_id, gender = c("M", "F"), chr_per_row = 4) {
   dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
@@ -10,6 +18,20 @@
 
 
 #' Plot chromosomes for single sample.
+#'
+#' @param x An object of \code{\link{CwobPipe}} or \code{\link{MethylCNVPipe}}
+#'   class.
+#' @param sample_id A character scalar of sample ID.
+#' @param gender A character scalar of gender. It is coded as either "M" or "F".
+#' @param size An integer scalar of the threshold to define CNVs. Default to
+#'   \code{5e6} (5 Mb).
+#' @param cn_boundary An numeric vector of length two which defines the
+#'   boundaries to define CNVs. If a segment has a segment mean lower than
+#'   the first element or higher than the second element, it is a CNV. It is
+#'   the absolute value, so 2 means no copy number change. Default to
+#'   \code{c(1.5, 2.5)}.
+#' @param verbose A logical scalar. Default to TRUE.
+#' @return A list of \code{\link[gtable]{gtable}} class.
 #' @noRd
 .plot_chromosomes_single_sample <-
   function(x,
@@ -41,11 +63,24 @@
       names(plot_lst) <- sele_chr
     }
     plot_lst
-    # list(plots = plot_lst, chr = sele_chr)
   }
 
 
 #' Prepare for the data of a single sample.
+#'
+#' @param x An object of \code{\link{CwobPipe}} or \code{\link{MethylCNVPipe}}
+#'   class.
+#' @param sample_id A character scalar of sample ID.
+#' @param gender A character scalar of gender. It is coded as either "M" or "F".
+#' @return A list of two elements:
+#'   \itemize{
+#'     \item \code{lrr}: A \code{data.frame} of LRRs which has three columns,
+#'       \code{chromosome}, \code{coordinate}, and \code{cn}. \code{cn} is
+#'       the absolute value of copy number, i.e. 2 means two copies without any
+#'       alternation.
+#'     \item \code{z}: A\code{data.fram} of segment which has four columns,
+#'       \code{chromosome}, \code{start}, \code{end} and \code{segmean}.
+#'   }
 #' @noRd
 .plot_single_sample_prep <- function(x, sample_id, gender = c("M", "F")) {
   if (!inherits(x, "CwobPipe") & !inherits(x, "MethylCNVPipe")) {
