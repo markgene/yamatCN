@@ -9,13 +9,14 @@
 report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
   genome_plot_width = 12, genome_plot_height = 9, chr_per_row = 4,
   chr_plot_width = 9, chr_plot_height = 6, size = 5e+06,
-  cn_boundary = c(1.5, 2.5), overwrite = FALSE, verbose = TRUE, ...)
+  cn_boundary = c(1.5, 2.5), segment_file = "segments.tab",
+  overwrite = FALSE, verbose = TRUE, ...)
 
 \S4method{report_pipe}{CwobPipe}(x, outdir,
   genome_plot_file = "genome-plot-cwob.png", genome_plot_width = 12,
   genome_plot_height = 9, chr_per_row = 4, chr_plot_width = 9,
   chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.5, 2.5),
-  overwrite = FALSE, verbose = TRUE)
+  segment_file = "segments.tab", overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{An object.}
@@ -47,6 +48,9 @@ the first element or higher than the second element, it is a CNV. It is
 the absolute value, so 2 means no copy number change. Default to
 \code{c(1.5, 2.5)}.}
 
+\item{segment_file}{A character scalar of segments file which is a table of
+segments. Default to "segments.tab".}
+
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
 \item{verbose}{A logical scalar. Default to TRUE.}
@@ -54,7 +58,7 @@ the absolute value, so 2 means no copy number change. Default to
 \item{...}{Any other arguments.}
 }
 \value{
-A character vector of file names.
+TBD.
 }
 \description{
 Report an object of pipeline classes.
