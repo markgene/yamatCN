@@ -152,3 +152,179 @@ cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
 
   return(output)
 }
+
+
+#' construct CN plot
+#'
+#' given a CN data frame plot points in ggplot. I borrow the function from
+#' \code{\link[GenVisR]{cnView_buildMain}} and color segment by segment mean.
+#'
+#' @name cnView_buildMain
+#' @param x a data frame with columns chromosome, coordinate, cn, p_value
+#' @param y a data frame with columns chromosome, coordinate for plotting
+#' boundaries
+#' @param z a data frame with columns chromsome, start, end, segmean specifying
+#' segments called from copy number (optional)
+#' @param chr a character string specifying chromosome
+#' @param CNscale Character string specifying if copy number calls supplied are
+#' relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One of
+#' "relative" or "absolute"
+#' @param layers additional ggplot2 layers to add.
+#' @param cn_boundary An numeric vector of length two which defines the
+#'   boundaries to define CNVs. If a segment has a segment mean lower than
+#'   the first element or higher than the second element, it is a CNV. It is
+#'   the absolute value, so 2 means no copy number change. Default to
+#'   \code{c(1.8, 2.2)}.
+#' @return ggplot2 object
+#' @noRd
+cnView_buildMain <- function(x, y, z=NULL, chr, CNscale=FALSE, layers=NULL, cn_boundary = c(1.8, 2.2)) {
+  # Define various parameters of the plot
+  dummy_data <-
+    ggplot2::geom_point(
+      data = y,
+      mapping = ggplot2::aes_string(x = 'coordinate', y = 2),
+      alpha = 0
+    )
+
+  theme <- ggplot2::theme(axis.text.x = ggplot2::element_text(angle=30, hjust=1))
+  if (CNscale == "relative") {
+    # cn fill colors
+    shade_cn <- ggplot2::scale_color_gradient2(
+      "Copy Number",
+      midpoint = 0,
+      low = '#009ACD',
+      mid = 'gray65',
+      high = '#C82536',
+      space = 'Lab'
+    )
+    # y label
+    ylabel <- ggplot2::ylab('Copy Number Difference')
+  } else if (CNscale == "absolute") {
+    # cn fill colors
+    shade_cn <- ggplot2::scale_color_gradient2(
+      "Copy Number",
+      midpoint = 2,
+      low = '#009ACD',
+      mid = 'gray65',
+      high = '#C82536',
+      space = 'Lab'
+    )
+    # y label
+    ylabel <- ggplot2::ylab('Absolute Copy Number')
+  } else {
+    memo <-
+      paste0(
+        "Did not recognize input to CNscale... defaulting to",
+        "absolute scale, please specify \"relative\"",
+        "if copy neutral calls == 0"
+      )
+    warning(memo)
+  }
+
+  # provide x label
+  xlabel <- ggplot2::xlab('Coordinate')
+
+  # allow an extra layer in the plot
+  if(!is.null(layers)) {
+    layers <- layers
+  } else {
+    layers <- ggplot2::geom_blank()
+  }
+
+  # if x contains a p_value column set an alpha for it and plot points
+  if (any('p_value' %in% colnames(x)))
+  {
+    x$transparency <- 1 - x$p_value
+    cnpoints <-
+      ggplot2::geom_point(
+        data = x,
+        mapping = ggplot2::aes_string(
+          x = 'coordinate',
+          y = 'cn',
+          colour = 'cn',
+          alpha = 'transparency'
+        )
+      )
+    transparency <- ggplot2::scale_alpha(guide = 'none')
+  } else {
+    cnpoints <-
+      ggplot2::geom_point(
+        data = x,
+        mapping = ggplot2::aes_string(x = 'coordinate',
+                                      y = 'cn',
+                                      colour = 'cn')
+      )
+    transparency <- ggplot2::geom_blank()
+  }
+
+  # Define segments for main plot
+  if (!is.null(z)) {
+    lower_bound <- cn_boundary[1]
+    higher_bound <- cn_boundary[2]
+    z %>%
+      dplyr::filter(segmean > lower_bound & segmean < higher_bound) %>%
+      ggplot2::geom_segment(
+        data = .,
+        mapping = ggplot2::aes(
+          x = start,
+          xend = end,
+          y = segmean,
+          yend = segmean
+        ),
+        color = "white",
+        size = 1
+      ) -> cnseg
+    z %>%
+      dplyr::filter(segmean < lower_bound) %>%
+      ggplot2::geom_segment(
+        data = .,
+        mapping = ggplot2::aes(
+          x = start,
+          xend = end,
+          y = segmean,
+          yend = segmean
+        ),
+        color = "#009ACD",
+        size = 1
+      ) -> cnseg1
+    z %>%
+      dplyr::filter(segmean > higher_bound) %>%
+      ggplot2::geom_segment(
+        data = .,
+        mapping = ggplot2::aes(
+          x = start,
+          xend = end,
+          y = segmean,
+          yend = segmean
+        ),
+        color = "#C82536",
+        size = 1
+      ) -> cnseg2
+  } else {
+    cnseg <- cnseg1 <- cnseg2 <- ggplot2::geom_blank()
+  }
+
+  # build the plot
+  tmp <- data.frame(x = 0, y = 0)
+  p1 <-
+    ggplot2::ggplot(data = tmp, ggplot2::aes(x = 0)) +
+    cnpoints +
+    shade_cn +
+    ylabel +
+    xlabel +
+    ggplot2::theme_bw() +
+    theme +
+    cnseg +
+    cnseg1 +
+    cnseg2 +
+    dummy_data +
+    transparency +
+    layers
+
+  if (chr == 'all') {
+    facet <- ggplot2::facet_wrap( ~ chromosome, scales = 'free')
+    p1 <- p1 + facet
+  }
+
+  return(p1)
+}
