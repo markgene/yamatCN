@@ -74,7 +74,8 @@
           z = dat$z,
           chr = chr,
           genome = "hg19",
-          CNscale = "absolute"
+          CNscale = "absolute",
+          cn_boundary = cn_boundary
         )
       }) -> plot_lst
       names(plot_lst) <- sele_chr

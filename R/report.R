@@ -88,6 +88,7 @@ setMethod(
             x = x,
             sample_id = sample_ids_dnacopy[i],
             gender = gender[i],
+            cn_boundary = cn_boundary,
             chr_per_row = chr_per_row
           )
           ggplot2::ggsave(
