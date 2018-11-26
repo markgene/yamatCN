@@ -6,8 +6,8 @@
 #' @param outdir A character scalar of output directory.
 #' @param genome_plot_file A character scalar of the genome plot file which
 #'   shows all chromosomes.
-#' @param genome_plot_width An integer scalar. Default to 12.
-#' @param genome_plot_height An integer scalar. Default to 9.
+#' @param genome_plot_width An integer scalar. Default to 9.
+#' @param genome_plot_height An integer scalar. Default to 15.
 #' @param chr_per_row An integer scalar of the number of chromosomes per row
 #'   in genome plot. Default to 4.
 #' @param chr_plot_width An integer scalar of the width of individual chromosome
@@ -20,7 +20,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.5, 2.5)}.
+#'   \code{c(1.8, 2.2)}.
 #' @param segment_file A character scalar of segments file which is a table of
 #'   segments. Default to "segments.tab".
 #' @param overwrite A logical scalar. Default to FALSE.
@@ -33,13 +33,13 @@ setGeneric(
   def = function(x,
                  outdir,
                  genome_plot_file = "genome-plot.png",
-                 genome_plot_width = 12,
-                 genome_plot_height = 9,
+                 genome_plot_width = 9,
+                 genome_plot_height = 15,
                  chr_per_row = 4,
                  chr_plot_width = 9,
                  chr_plot_height = 6,
                  size = 5e6,
-                 cn_boundary = c(1.5, 2.5),
+                 cn_boundary = c(1.8, 2.2),
                  segment_file = "segments.tab",
                  overwrite = FALSE,
                  verbose = TRUE,
@@ -56,13 +56,13 @@ setMethod(
   definition = function(x,
                         outdir,
                         genome_plot_file = "genome-plot-cwob.png",
-                        genome_plot_width = 12,
-                        genome_plot_height = 9,
+                        genome_plot_width = 9,
+                        genome_plot_height = 15,
                         chr_per_row = 4,
                         chr_plot_width = 9,
                         chr_plot_height = 6,
                         size = 5e6,
-                        cn_boundary = c(1.5, 2.5),
+                        cn_boundary = c(1.8, 2.2),
                         segment_file = "segments.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {

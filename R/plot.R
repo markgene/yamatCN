@@ -29,7 +29,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.5, 2.5)}.
+#'   \code{c(1.8, 2.2)}.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @return A list of \code{\link[gtable]{gtable}} class.
 #' @noRd
@@ -38,7 +38,7 @@
            sample_id,
            gender = c("M", "F"),
            size = 5e6,
-           cn_boundary = c(1.5, 2.5),
+           cn_boundary = c(1.8, 2.2),
            verbose = TRUE) {
     dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
     dat$z %>%
