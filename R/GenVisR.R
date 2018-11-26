@@ -34,8 +34,11 @@
 #' sub-plot.
 #' @param out Character vector specifying the the object to output, one of
 #' "data", "grob", or "plot", defaults to "plot" (see returns).
-#' @param segmentColor Character string specifying the color of segment lines. Used only if
-#' Z is not null.
+#' @param cn_boundary An numeric vector of length two which defines the
+#'   boundaries to define CNVs. If a segment has a segment mean lower than
+#'   the first element or higher than the second element, it is a CNV. It is
+#'   the absolute value, so 2 means no copy number change. Default to
+#'   \code{c(1.8, 2.2)}.
 #' @details cnView is able to plot in two modes specified via the `chr`
 #' parameter, these modes are single chromosome view in which an ideogram is
 #' displayed and genome view where chromosomes are faceted. For the single
@@ -74,11 +77,10 @@
 #'       plotting it which returns \code{NULL}.
 #'   }
 #' @noRd
-
 cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
                    CNscale="absolute", ideogram_txtAngle=45,
                    ideogram_txtSize=5, plotLayer=NULL, ideogramLayer=NULL,
-                   out="plot", segmentColor=NULL)
+                   out="plot", cn_boundary = c(1.8, 2.2))
 {
   # Perform a basic quality check
   input <- GenVisR:::cnView_qual(x, y, z, genome, CNscale=CNscale)
@@ -120,7 +122,7 @@ cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
   if(chr == 'all')
   {
     # plot the graphic
-    p1 <- GenVisR:::cnView_buildMain(x, z=z, dummyData, chr=chr, CNscale = CNscale)
+    p1 <- cnView_buildMain(x, z=z, dummyData, chr=chr, CNscale = CNscale, cn_boundary = cn_boundary)
   } else {
     # plot chromosome
     chromosome_plot <- GenVisR:::ideoView(cytobands, chromosome=chr,
@@ -136,8 +138,8 @@ cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
     }
 
     # build the plot
-    CN_plot <- GenVisR:::cnView_buildMain(x, dummyData, z=z, chr=chr, CNscale=CNscale,
-                                layers=plotLayer, segmentColor=segmentColor)
+    CN_plot <- cnView_buildMain(x, dummyData, z=z, chr=chr, CNscale=CNscale,
+                                layers=plotLayer, cn_boundary = cn_boundary)
   }
 
   # Decide what to output
