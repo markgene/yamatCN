@@ -153,9 +153,9 @@ setMethod(
           dplyr::filter(ID == sample_ids_dnacopy[i]) %>%
           dplyr::select(-ID)
         if ("lrr_shift" %in% names(x@dat)) {
-          z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1 - x@dat$lrr_shift))
+          z <- dplyr::mutate(z, CN = 2 ** (seg.mean + 1 - x@dat$lrr_shift))
         } else {
-          z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1))
+          z <- dplyr::mutate(z, CN = 2 ** (seg.mean + 1))
         }
         if (gender[i] == "F") {
           z <- dplyr::filter(z, chromosome != "chrY")
