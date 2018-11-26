@@ -58,24 +58,6 @@
 #'
 #' If it is available cnView can plot copy-number segment calls on top of raw
 #' calls supplied to parameter `x` via the parameter `z`.
-#' @examples
-#' # Create data
-#' chromosome <- 'chr14'
-#' coordinate <- sort(sample(0:106455000, size=2000, replace=FALSE))
-#' cn <- c(rnorm(300, mean=3, sd=.2), rnorm(700, mean=2, sd=.2), rnorm(1000, mean=3, sd=.2))
-#' data <- as.data.frame(cbind(chromosome, coordinate, cn))
-#'
-#' # Plot raw copy number calls
-#' cnView(data, chr='chr14', genome='hg19', ideogram_txtSize=4)
-#' @return One of the following, a list of dataframes containing data to be
-#' plotted, a grob object, or a plot.
-#' @note Bugs fixed:
-#'   \itemize{
-#'     \item Add \code{CNscale} argument to plot all chromosome which was missed
-#'       and gives error/warning.
-#'     \item When plot a single chromosome, return the object instead of directly
-#'       plotting it which returns \code{NULL}.
-#'   }
 #' @noRd
 cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
                    CNscale="absolute", ideogram_txtAngle=45,
