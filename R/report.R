@@ -21,10 +21,12 @@
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
 #'   \code{c(1.5, 2.5)}.
+#' @param segment_file A character scalar of segments file which is a table of
+#'   segments. Default to "segments.tab".
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Any other arguments.
-#' @return A character vector of file names.
+#' @return TBD.
 #' @export
 setGeneric(
   name = "report_pipe",
@@ -38,6 +40,7 @@ setGeneric(
                  chr_plot_height = 6,
                  size = 5e6,
                  cn_boundary = c(1.5, 2.5),
+                 segment_file = "segments.tab",
                  overwrite = FALSE,
                  verbose = TRUE,
                  ...) {
@@ -60,6 +63,7 @@ setMethod(
                         chr_plot_height = 6,
                         size = 5e6,
                         cn_boundary = c(1.5, 2.5),
+                        segment_file = "segments.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {
     print(genome_plot_file)
@@ -133,6 +137,31 @@ setMethod(
             }
           )
         }
+      }
+    )
+    # Segment table
+    if (verbose) {
+      message("Writing segment table...")
+    }
+    segment_files <- lapply(
+      seq(length(sample_dirs)),
+      function(i) {
+        if (verbose) {
+          message("Writing segment table for sample ", names(sample_dirs[i]))
+        }
+        z <- x@dat$segments %>%
+          dplyr::filter(ID == sample_ids_dnacopy[i]) %>%
+          dplyr::select(-ID)
+        if ("lrr_shift" %in% names(x@dat)) {
+          z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1 - x@dat$lrr_shift))
+        } else {
+          z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1))
+        }
+        if (gender[i] == "F") {
+          z <- dplyr::filter(z, chromosome != "chrY")
+        }
+        outfile <- file.path(sample_dirs[i], segment_file)
+        write.table(x = z, file = outfile, quote = FALSE, row.names = FALSE)
       }
     )
   }
