@@ -96,9 +96,9 @@
     dplyr::filter(ID == sample_id) %>%
     dplyr::rename(chromosome = chrom, start = loc.start, end = loc.end, segmean = seg.mean)
   if ("lrr_shift" %in% names(x@dat)) {
-    z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1 - x@dat$lrr_shift))
+    z <- dplyr::mutate(z, seg.mean = 2 ** (seg.mean + 1 - x@dat$lrr_shift))
   } else {
-    z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1))
+    z <- dplyr::mutate(z, seg.mean = 2 ** (seg.mean + 1))
   }
   z <- dplyr::select(z, chromosome, start, end, segmean)
   if (gender == "F") {
