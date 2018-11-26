@@ -159,7 +159,7 @@ setMethod(
           z <- dplyr::mutate(z, CN = 2 ** (seg.mean + 1))
         }
         if (gender[i] == "F") {
-          z <- dplyr::filter(z, chromosome != "chrY")
+          z <- dplyr::filter(z, chrom != "chrY")
         }
         outfile <- file.path(sample_dirs[i], segment_file)
         write.table(x = z, file = outfile, quote = FALSE, row.names = FALSE)
