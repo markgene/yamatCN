@@ -6,15 +6,32 @@
 #'   class.
 #' @param sample_id A character scalar of sample ID.
 #' @param gender A character scalar of gender. It is coded as either "M" or "F".
+#' @param cn_boundary An numeric vector of length two which defines the
+#'   boundaries to define CNVs. If a segment has a segment mean lower than
+#'   the first element or higher than the second element, it is a CNV. It is
+#'   the absolute value, so 2 means no copy number change. Default to
+#'   \code{c(1.8, 2.2)}.
 #' @param chr_per_row An integer scalar of chromosome per row in the plot.
 #'   Default to 4.
 #' @return A \code{\link{ggplot2}{ggplot}} object.
 #' @noRd
-.plot_genome_single_sample <- function(x, sample_id, gender = c("M", "F"), chr_per_row = 4) {
-  dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
-  cnView(dat$lrr, z = dat$z, chr = "all", genome = "hg19", CNscale = "absolute") +
-    ggplot2::facet_wrap(~chromosome, scales = "free_x", ncol = chr_per_row)
-}
+.plot_genome_single_sample <-
+  function(x,
+           sample_id,
+           gender = c("M", "F"),
+           cn_boundary = c(1.8, 2.2),
+           chr_per_row = 4) {
+    dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
+    cnView(
+      dat$lrr,
+      z = dat$z,
+      chr = "all",
+      genome = "hg19",
+      CNscale = "absolute",
+      cn_boundary = cn_boundary
+    ) +
+      ggplot2::facet_wrap( ~ chromosome, scales = "free_x", ncol = chr_per_row)
+  }
 
 
 #' Plot chromosomes for single sample.
