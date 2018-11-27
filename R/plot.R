@@ -400,15 +400,15 @@ cnView <- function(x,
       )) +
       ggplot2::geom_segment(
         x = GenomicRanges::start(gr),
-        y = 0.2,
+        y = -0.05,
         xend = GenomicRanges::end(gr),
-        yend = 0.2,
+        yend = -0.05,
         size = 3,
-        colour = "black",
-        alpha = 0.5
+        colour = "red",
+        alpha = 0.9
       ) +
       ggplot2::xlab(as.character(gr_df$name)) +
-      ggplot2::theme(legend.position = "none")
+      ggplot2::theme(legend.position = "top")
   }
 
   # Decide what to output

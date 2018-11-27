@@ -257,7 +257,7 @@ setMethod(
               message("Writing region ", region_name)
             if (overwrite | !file.exists(outfile)) {
               cnView(
-                dat$lrr,
+                dat$loci,
                 z = dat$z,
                 gr = grs[k],
                 genome = "hg19",
