@@ -1,7 +1,7 @@
 Package: yamatCN
 Type: Package
 Title: Yet Another Methylation Array Toolkit Copy Number Analysis
-Version: 0.0.0.9017
+Version: 0.0.0.9018
 Authors@R: c(
     person("Mark", "Chen", email = "mjchen.gene@gmail.com", role = "cre"))
 Maintainer: Mark J Chen <mjchen.gene@gmail.com>
