@@ -26,28 +26,46 @@ report_dir <- tempdir()
 Conumee pipeline:
 
 ```{r conumee}
+# Analysis
 conumee_pipe(
   ref = ref,
   qry = qry,
   report_dir = report_dir,
-  norm_method = "swan"
+  norm_method = "swan",
+  batch = NULL,
+  batch2 = NULL
 ) -> conumee_result
+
+# Report
+outdir <- "~/Downloads/yamatCN"
+conumee_report <-
+  yamatCN::report_pipe(
+    conumee_result,
+    outdir,
+    genome_plot_width = 9,
+    genome_plot_height = 15,
+    cn_boundary = c(1.8, 2.2)
+  )
 ```
 
 MethylCNV pipeline:
 
 ```{r methylcnv}
+# Analysis
 methylcnv_pipe(
   ref = ref,
   qry = qry,
   report_dir = report_dir,
   norm_method = "methylcnv"
 ) -> methylcnv_result
+
+# Report: TBA.
 ```
 
 Conumee without binning (CWOB) pipeline:
 
 ```{r cwob}
+# Analysis
 cwob_pipe(
   ref = ref,
   qry = qry,
@@ -56,6 +74,17 @@ cwob_pipe(
   batch = NULL,
   batch2 = NULL
 ) -> cwob_result
+
+# Report
+cwob_report <-
+  yamatCN::report_pipe(
+    cwob_result,
+    outdir,
+    genome_plot_width = 9,
+    genome_plot_height = 15,
+    size = 1,
+    cn_boundary = c(1.8, 2.2)
+  )
 ```
 
 Known batch effect can be removed by setting `batch` and `batch2` arguments.
