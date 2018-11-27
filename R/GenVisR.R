@@ -170,7 +170,12 @@ cnView_buildMain <- function(x, y, z=NULL, chr, CNscale=FALSE, layers=NULL, cn_b
       alpha = 0
     )
 
-  theme <- ggplot2::theme(axis.text.x = ggplot2::element_text(angle=30, hjust=1))
+  theme <- ggplot2::theme(
+    panel.grid.major = ggplot2::element_blank(),
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    axis.line = ggplot2::element_line(colour = "black"),
+    axis.text.x = ggplot2::element_text(angle=30, hjust=1))
   if (CNscale == "relative") {
     # cn fill colors
     shade_cn <- ggplot2::scale_color_gradient2(
