@@ -545,7 +545,7 @@ cnView_buildMain <-
               x = coordinate,
               y = cn,
               colour = cn,
-              alpha = 0.5 + 1 / (1 + exp(cn - 2))
+              alpha = 1 / (1 + exp(-abs(cn - 2)))
             )
           )
       } else if (CNscale == "relative") {
@@ -556,7 +556,7 @@ cnView_buildMain <-
               x = coordinate,
               y = cn,
               colour = cn,
-              alpha = 0.5 + 1 / (1 + exp(cn))
+              alpha = 1 / (1 + exp(-abs(cn)))
             )
           )
       }
@@ -637,3 +637,4 @@ cnView_buildMain <-
 
     return(p1)
   }
+
