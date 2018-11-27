@@ -169,6 +169,8 @@ setMethod(
 
 
 #' @describeIn report_pipe x is \code{ConumeePipe}.
+#' @param igv_segment_file A character scalar of segments file which is a table of
+#'   segments. Default to "igv-segments.tab".
 setMethod(
   f = "report_pipe",
   signature = c(x = "ConumeePipe"),
@@ -183,9 +185,13 @@ setMethod(
                         size = 5e6,
                         cn_boundary = c(1.8, 2.2),
                         segment_file = "segments-conumee.tab",
+                        igv_segment_file = "igv-segments.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {
+    # Check argument
     CNscale <- "absolute"
+    if (missing(igv_segment_file) | !igv_segment_file)
+      igv_segment_file <- "igv-segments.tab"
     qry_idx <- .query_indices(x@dat$minfi, label = "query")
     sample_dirs <- yamat::init_report(x@dat$minfi[, qry_idx], outdir)
     # Gender
@@ -199,6 +205,7 @@ setMethod(
           message("Sample ", i, " (", length(x@dat$conumee_results), "): ", cnv_res@name)
         }
         dat <- .plot_prep(cnv_res, gender[i], scale = CNscale)
+        # Genome plot
         plot_file <- file.path(sample_dirs[i], genome_plot_file)
         if (overwrite | !file.exists(plot_file)) {
           p1 <- cnView(
@@ -217,8 +224,17 @@ setMethod(
             width = genome_plot_width
           )
         }
-        outfile <- file.path(sample_dirs[i], segment_file)
-        write.table(x = cnv_res@seg$summary, file = outfile, quote = FALSE, row.names = FALSE)
+        # Segment file
+        segment_file <- file.path(sample_dirs[i], segment_file)
+        if (overwrite | !file.exists(segment_file)) {
+          write.table(x = cnv_res@seg$summary, file = segment_file, quote = FALSE, row.names = FALSE)
+        }
+        # IGV segment file
+        igv_segment_file <- file.path(sample_dirs[i], igv_segment_file)
+        if (overwrite | !file.exists(igv_segment_file)) {
+          igv_seg_df <- .to_igv_segment(cnv_res@seg$summary, cnv_res@name)
+          write.table(x = igv_seg_df, file = igv_segment_file, quote = FALSE, row.names = FALSE)
+        }
       }
     )
   }
