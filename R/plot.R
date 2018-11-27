@@ -426,6 +426,9 @@ cnView <- function(x,
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
 #'   \code{c(1.8, 2.2)}.
+#' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
+#'   extremely large. The will set the values larger than \code{max_cn} to
+#'   \code{max_cn}. Default to 6.
 #' @return ggplot2 object
 #' @noRd
 cnView_buildMain <-
@@ -435,7 +438,8 @@ cnView_buildMain <-
            chr,
            CNscale = c("absolute", "relative"),
            layers = NULL,
-           cn_boundary = c(1.8, 2.2)) {
+           cn_boundary = c(1.8, 2.2),
+           max_cn = 6) {
     # Define various parameters of the plot
     CNscale <- match.arg(CNscale)
     dummy_data <-
@@ -444,6 +448,8 @@ cnView_buildMain <-
         mapping = ggplot2::aes_string(x = 'coordinate', y = 2),
         alpha = 0
       )
+    # Replace extremely large CN with max_cn.
+    x$cn <- ifelse(x$cn > max_cn, max_cn, x$cn)
 
     theme <- ggplot2::theme(
       legend.position = "top",
@@ -497,8 +503,7 @@ cnView_buildMain <-
     }
 
     # if x contains a p_value column set an alpha for it and plot points
-    if (any('p_value' %in% colnames(x)))
-    {
+    if (any('p_value' %in% colnames(x))) {
       x$transparency <- 1 - x$p_value
       cnpoints <-
         ggplot2::geom_point(
@@ -598,7 +603,7 @@ cnView_buildMain <-
       cnseg +
       cnseg1 +
       cnseg2 +
-      ggplot2::lims(y = c(0, 6)) +
+      ggplot2::lims(y = c(0, max_cn)) +
       dummy_data +
       transparency +
       layers
