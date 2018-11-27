@@ -138,3 +138,61 @@
   }
   list(lrr = cna_df, z = z)
 }
+
+
+#' Prepare for the data of a single sample for \code{\link[conumee]{CNV.analysis}}
+#' object.
+#'
+#' @param x A \code{\link[conumee]{CNV.analysis}} object.
+#' @param gender A character scalar of gender. It is coded as either "M" or "F".
+#' @param scaled Character string specifying if copy number calls supplied are
+#' relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One of
+#' "relative" or "absolute"
+#' @return A list of two elements:
+#'   \itemize{
+#'     \item \code{lrr}: A \code{data.frame} of LRRs which has three columns,
+#'       \code{chromosome}, \code{coordinate}, and \code{cn}. \code{cn} is
+#'       the absolute value of copy number, i.e. 2 means two copies without any
+#'       alternation.
+#'     \item \code{z}: A\code{data.fram} of segment which has four columns,
+#'       \code{chromosome}, \code{start}, \code{end} and \code{segmean}.
+#'   }
+#' @noRd
+.plot_prep <- function(x, gender = c("M", "F"), scaled = c("relative", "absolute")) {
+  if (!inherits(x, "CNV.analysis")) {
+    stop("Argument x should be an object of CNV.analysis class.")
+  }
+  if (!gender %in% c("M", "F")) {
+    stop("Argument gender should be either M or F.")
+  }
+  scaled <- match.arg(scaled)
+  z <- x@seg$summary %>%
+    dplyr::rename(chromosome = chrom, start = loc.start, end = loc.end, segmean = seg.mean)
+  if (scaled == "absolute") {
+    z <- dplyr::mutate(z, segmean = .to_absolute(segmean - x@bin$shift))
+  } else if (scaled == "relative") {
+    z <- dplyr::mutate(z, segmean = segmean - x@bin$shift)
+  }
+  if (gender == "F") {
+    z <- dplyr::filter(z, chromosome != "chrY")
+  }
+  # LRR
+  if (scaled == "absolute") {
+    cn <- .to_absolute(x@bin$ratio - x@bin$shift)
+  } else if (scaled == "relative") {
+    cn <- x@bin$ratio - x@bin$shift
+  }
+  cna_df <-
+    data.frame(
+      chromosome = GenomicRanges::seqnames(x@anno@bins),
+      coordinate = GenomicRanges::values(x@anno@bins)$midpoint,
+      cn = cn
+    )
+  if (gender == "F") {
+    cna_df <- dplyr::filter(cna_df, chromosome != "chrY")
+  }
+  list(lrr = cna_df, z = z)
+}
+
+
+.to_absolute <- function(lrr) { 2 ** (lrr * 2 + 1)}
