@@ -236,14 +236,30 @@ cnView_buildMain <- function(x, y, z=NULL, chr, CNscale=FALSE, layers=NULL, cn_b
       )
     transparency <- ggplot2::scale_alpha(guide = 'none')
   } else {
-    cnpoints <-
-      ggplot2::geom_point(
-        data = x,
-        mapping = ggplot2::aes_string(x = 'coordinate',
-                                      y = 'cn',
-                                      colour = 'cn')
-      )
-    transparency <- ggplot2::geom_blank()
+    if (CNscale == "absolute") {
+      cnpoints <-
+        ggplot2::geom_point(
+          data = x,
+          mapping = ggplot2::aes(
+            x = coordinate,
+            y = cn,
+            colour = cn,
+            alpha = 0.5 + 1 / (1 + exp(cn - 2))
+          )
+        )
+    } else if (CNscale == "relative") {
+      cnpoints <-
+        ggplot2::geom_point(
+          data = x,
+          mapping = ggplot2::aes(
+            x = coordinate,
+            y = cn,
+            colour = cn,
+            alpha = 0.5 + 1 / (1 + exp(cn))
+          )
+        )
+    }
+    transparency <- ggplot2::scale_alpha(guide = 'none')
   }
 
   # Define segments for main plot
