@@ -473,7 +473,7 @@ cnView_buildMain <-
 
     theme <- ggplot2::theme(
       legend.position = "top",
-      panel.grid.major = ggplot2::element_blank(),
+      # panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
       panel.background = ggplot2::element_blank(),
       axis.line = ggplot2::element_line(colour = "black"),
@@ -624,6 +624,8 @@ cnView_buildMain <-
       cnseg1 +
       cnseg2 +
       ggplot2::lims(y = c(0, max_cn)) +
+      ggplot2::scale_y_continuous(breaks = c(-0.5, seq(max_cn))) +
+      ggplot2::scale_x_continuous(breaks = NULL) +
       dummy_data +
       transparency +
       layers
