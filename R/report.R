@@ -171,6 +171,8 @@ setMethod(
 #' @describeIn report_pipe x is \code{ConumeePipe}.
 #' @param igv_segment_file A character scalar of segments file which is a table of
 #'   segments. Default to "igv-segments.tab".
+#' @param detail_plot_height An integer scalar. Default to 7.
+#' @param detail_plot_width An integer scalar. Default to 5.
 setMethod(
   f = "report_pipe",
   signature = c(x = "ConumeePipe"),
@@ -186,17 +188,23 @@ setMethod(
                         cn_boundary = c(1.8, 2.2),
                         segment_file = "segments-conumee.tab",
                         igv_segment_file = "igv-segments.tab",
+                        detail_plot_height = 7,
+                        detail_plot_width = 5,
                         overwrite = FALSE,
                         verbose = TRUE) {
     # Check argument
     CNscale <- "absolute"
     if (missing(igv_segment_file) | !igv_segment_file)
       igv_segment_file <- "igv-segments.tab"
+    if (missing(detail_plot_height) | !is.numeric(detail_plot_height))
+      detail_plot_height <- 7
+    if (missing(detail_plot_width) | !is.numeric(detail_plot_width))
+      detail_plot_width <- 5
     qry_idx <- .query_indices(x@dat$minfi, label = "query")
     sample_dirs <- yamat::init_report(x@dat$minfi[, qry_idx], outdir)
     # Gender
     gender <- .gender(x@dat$minfi[, qry_idx])
-    # Plot genome
+    # Sample by sample
     res <- lapply(
       seq(length(x@dat$conumee_results)),
       function(i) {
@@ -235,6 +243,36 @@ setMethod(
           igv_seg_df <- .to_igv_segment(cnv_res@seg$summary, cnv_res@name)
           write.table(x = igv_seg_df, file = igv_segment_file, quote = FALSE, row.names = FALSE)
         }
+        # Plot detail regions
+        grs <- cnv_res@anno@detail
+        plot_lst <- lapply(
+          seq(length(grs)),
+          function(k) {
+            region_name <- GenomicRanges::mcols(grs[k])$name %>%
+              as.character() %>%
+              stringr::str_replace_all(., "\\/", "_")
+            outfile <- paste0(region_name, ".png")
+            outfile <- file.path(sample_dirs[i], outfile)
+            if (verbose)
+              message("Writing region ", region_name)
+            if (overwrite | !file.exists(outfile)) {
+              cnView(
+                dat$lrr,
+                z = dat$z,
+                gr = grs[k],
+                genome = "hg19",
+                CNscale = CNscale,
+                cn_boundary = cn_boundary
+              ) %>%
+                ggplot2::ggsave(
+                  filename = outfile,
+                  plot = .,
+                  height = detail_plot_height,
+                  width = detail_plot_width
+                )
+            }
+          }
+        )
       }
     )
   }
