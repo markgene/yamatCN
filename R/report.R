@@ -22,7 +22,7 @@
 #'   the absolute value, so 2 means no copy number change. Default to
 #'   \code{c(1.8, 2.2)}.
 #' @param segment_file A character scalar of segments file which is a table of
-#'   segments. Default to "segments.tab".
+#'   segments. Default to "segments-cwob.tab".
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Any other arguments.
@@ -63,10 +63,9 @@ setMethod(
                         chr_plot_height = 6,
                         size = 5e6,
                         cn_boundary = c(1.8, 2.2),
-                        segment_file = "segments.tab",
+                        segment_file = "segments-cwob.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {
-    print(genome_plot_file)
     qry_idx <- .query_indices(x@dat$minfi, label = "query")
     sample_dirs <- yamat::init_report(x@dat$minfi[, qry_idx], outdir)
     sample_ids_dnacopy <- .to_DNAcopy_sample_ids(x@dat$minfi[, qry_idx])
