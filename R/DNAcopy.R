@@ -229,6 +229,16 @@ summarize_dnacopy_segments <- function(x, ...) {
 }
 
 
+#' Convert a summary \code{data.frame} to IGV CBS format.
+.to_igv_segment <- function(summary_df, sample_id) {
+  summary_df %>%
+    dplyr::mutate(Sample = sample_id) %>%
+    dplyr::mutate(Chromosome = stringr::str_remove_all(chrom, "^chr")) %>%
+    dplyr::rename(Start = loc.start, End = loc.end, Num_Probes = num.mark, Segment_Mean = seg.mean) %>%
+    dplyr::select(Sample, Chromosome, Start, End, Num_Probes, Segment_Mean)
+}
+
+
 #' Convert LRR to absolute copy number (neutral state == 2).
 .to_absolute <- function(lrr) { 2 ** (lrr * 2 + 1)}
 
