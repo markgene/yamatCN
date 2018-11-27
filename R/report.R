@@ -169,6 +169,63 @@ setMethod(
 )
 
 
+#' @describeIn report_pipe x is \code{ConumeePipe}.
+setMethod(
+  f = "report_pipe",
+  signature = c(x = "ConumeePipe"),
+  definition = function(x,
+                        outdir,
+                        genome_plot_file = "genome-plot-conumee.png",
+                        genome_plot_width = 9,
+                        genome_plot_height = 15,
+                        chr_per_row = 4,
+                        chr_plot_width = 9,
+                        chr_plot_height = 6,
+                        size = 5e6,
+                        cn_boundary = c(1.8, 2.2),
+                        segment_file = "segments-conumee.tab",
+                        overwrite = FALSE,
+                        verbose = TRUE) {
+    CNscale <- "absolute"
+    qry_idx <- .query_indices(x@dat$minfi, label = "query")
+    sample_dirs <- yamat::init_report(x@dat$minfi[, qry_idx], outdir)
+    # Gender
+    gender <- .gender(x@dat$minfi[, qry_idx])
+    # Plot genome
+    res <- lapply(
+      seq(length(x@dat$conumee_results)),
+      function(i) {
+        cnv_res <- x@dat$conumee_results[[i]]
+        if (verbose) {
+          message("Sample ", i, " (", length(x@dat$conumee_results), "): ", cnv_res@name)
+        }
+        dat <- .plot_prep(cnv_res, gender[i], scale = CNscale)
+        plot_file <- file.path(sample_dirs[i], genome_plot_file)
+        if (overwrite | !file.exists(plot_file)) {
+          p1 <- cnView(
+            dat$lrr,
+            z = dat$z,
+            chr = "all",
+            genome = "hg19",
+            CNscale = CNscale,
+            cn_boundary = cn_boundary
+          ) +
+            ggplot2::facet_wrap( ~ chromosome, scales = "free_x", ncol = chr_per_row)
+          ggplot2::ggsave(
+            filename = plot_file,
+            plot = p1,
+            height = genome_plot_height,
+            width = genome_plot_width
+          )
+        }
+        outfile <- file.path(sample_dirs[i], segment_file)
+        write.table(x = cnv_res@seg$summary, file = outfile, quote = FALSE, row.names = FALSE)
+      }
+    )
+  }
+)
+
+
 #' To \code{minfi} sample name.
 #'
 #' The function translates sample IDs of \code{DNAcopy} to those of the input
