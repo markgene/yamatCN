@@ -114,9 +114,9 @@
     dplyr::filter(ID == sample_id) %>%
     dplyr::rename(chromosome = chrom, start = loc.start, end = loc.end, segmean = seg.mean)
   if ("lrr_shift" %in% names(x@dat)) {
-    z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1 - x@dat$lrr_shift))
+    z <- dplyr::mutate(z, segmean = .to_absolute(segmean - x@dat$lrr_shift))
   } else {
-    z <- dplyr::mutate(z, segmean = 2 ** (segmean + 1))
+    z <- dplyr::mutate(z, segmean = .to_absolute(segmean))
   }
   z <- dplyr::select(z, chromosome, start, end, segmean)
   if (gender == "F") {
@@ -129,8 +129,12 @@
   }
   cna_df <- cna_df[, c("chrom", "maploc", sample_id)]
   colnames(cna_df) <- c("chromosome", "coordinate", "cn")
+  if ("lrr_shift" %in% names(x@dat)) {
+    cna_df <- dplyr::mutate(cna_df, cn = .to_absolute(cn - x@dat$lrr_shift))
+  } else {
+    cna_df <- dplyr::mutate(cna_df, cn = .to_absolute(cn))
+  }
   cna_df %>%
-    dplyr::mutate(cn = 2 ** (cn + 1)) %>%
     dplyr::mutate(chromosome = forcats::fct_relevel(chromosome, paste0("chr", c(1:22, "X", "Y")))) %>%
     dplyr::select(chromosome, coordinate, cn) -> cna_df
   if (gender == "F") {
