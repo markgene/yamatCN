@@ -158,6 +158,10 @@
 #'       \code{chromosome}, \code{coordinate}, and \code{cn}. \code{cn} is
 #'       the absolute value of copy number, i.e. 2 means two copies without any
 #'       alternation.
+#'     \item \code{loci}: A \code{data.frame} of LRRs of loci which has three
+#'       columns, \code{chromosome}, \code{coordinate}, and \code{cn}. \code{cn}
+#'       is the absolute value of copy number, i.e. 2 means two copies without
+#'       any alternation.
 #'     \item \code{z}: A\code{data.fram} of segment which has four columns,
 #'       \code{chromosome}, \code{start}, \code{end} and \code{segmean}.
 #'   }
@@ -180,7 +184,7 @@
   if (gender == "F") {
     z <- dplyr::filter(z, chromosome != "chrY")
   }
-  # LRR
+  # LRR of bins
   if (scaled == "absolute") {
     cn <- .to_absolute(x@bin$ratio - x@bin$shift)
   } else if (scaled == "relative") {
@@ -195,7 +199,23 @@
   if (gender == "F") {
     cna_df <- dplyr::filter(cna_df, chromosome != "chrY")
   }
-  list(lrr = cna_df, z = z)
+  # LRR of loci
+  loci_names <- names(x@anno@probes)
+  if (scaled == "absolute") {
+    loci_cn <- .to_absolute(x@fit$ratio[loci_names] - x@bin$shift)
+  } else if (scaled == "relative") {
+    loci_cn <- x@fit$ratio[loci_names] - x@bin$shift
+  }
+  loci_df <-
+    data.frame(
+      chromosome = GenomicRanges::seqnames(x@anno@probes),
+      coordinate = GenomicRanges::start(x@anno@probes),
+      cn = loci_cn
+    )
+  if (gender == "F") {
+    loci_df <- dplyr::filter(loci_df, chromosome != "chrY")
+  }
+  list(lrr = cna_df, z = z, loci = loci_df)
 }
 
 
