@@ -229,3 +229,6 @@ summarize_dnacopy_segments <- function(x, ...) {
 }
 
 
+#' Convert LRR to absolute copy number (neutral state == 2).
+.to_absolute <- function(lrr) { 2 ** (lrr * 2 + 1)}
+

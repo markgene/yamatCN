@@ -199,4 +199,3 @@
 }
 
 
-.to_absolute <- function(lrr) { 2 ** (lrr * 2 + 1)}
