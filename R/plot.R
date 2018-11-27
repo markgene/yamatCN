@@ -207,36 +207,39 @@
 #'
 #' @name cnView
 #' @param x Object of class data frame with rows representing copy number calls
-#' from a single sample. The data frame must contain columns with the following
-#' names "chromosome", "coordinate", "cn", and optionally "p_value"
-#' (see details).
+#'   from a single sample. The data frame must contain columns with the following
+#'   names "chromosome", "coordinate", "cn", and optionally "p_value"
+#'   (see details).
 #' @param y Object of class data frame with rows representing cytogenetic bands
-#' for a chromosome. The data frame must contain columns with the following
-#' names "chrom", "chromStart", "chromEnd", "name", "gieStain" for plotting the
-#' ideogram (optional: see details).
+#'   for a chromosome. The data frame must contain columns with the following
+#'   names "chrom", "chromStart", "chromEnd", "name", "gieStain" for plotting the
+#'   ideogram (optional: see details).
 #' @param z Object of class data frame with row representing copy number segment
-#' calls. The data frame must contain columns with the following names
-#' "chromosome", "start", "end", "segmean" (optional: see details)
+#'   calls. The data frame must contain columns with the following names
+#'   "chromosome", "start", "end", "segmean" (optional: see details)
 #' @param genome Character string specifying a valid UCSC genome (see details).
 #' @param chr Character string specifying which chromosome to plot one of
-#' "chr..." or "all"
+#'   "chr..." or "all".
 #' @param CNscale Character string specifying if copy number calls supplied are
-#' relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One of
-#' "relative" or "absolute"
+#'   relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One
+#'   of "relative" or "absolute".
 #' @param ideogram_txtAngle Integer specifying the angle of cytogenetic labels
-#' on the ideogram subplot.
+#'   on the ideogram subplot.
 #' @param ideogram_txtSize Integer specifying the size of cytogenetic labels on
-#' the ideogram subplot.
+#'   the ideogram subplot.
 #' @param plotLayer Valid ggplot2 layer to be added to the copy number plot.
 #' @param ideogramLayer Valid ggplot2 layer to be added to the ideogram
-#' sub-plot.
+#'   sub-plot.
 #' @param out Character vector specifying the the object to output, one of
-#' "data", "grob", or "plot", defaults to "plot" (see returns).
+#'   "data", "grob", or "plot", defaults to "plot" (see returns).
 #' @param cn_boundary An numeric vector of length two which defines the
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
 #'   \code{c(1.8, 2.2)}.
+#' @param gr A genomic range of \code{\link[GenomicRanges]{GRanges}} class.
+#'   If it is provided, neglect \code{chr} and plot the region defined. Default
+#'   to \code{NULL}.
 #' @details cnView is able to plot in two modes specified via the `chr`
 #' parameter, these modes are single chromosome view in which an ideogram is
 #' displayed and genome view where chromosomes are faceted. For the single
@@ -257,10 +260,20 @@
 #' If it is available cnView can plot copy-number segment calls on top of raw
 #' calls supplied to parameter `x` via the parameter `z`.
 #' @noRd
-cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
-                   CNscale="absolute", ideogram_txtAngle=45,
-                   ideogram_txtSize=5, plotLayer=NULL, ideogramLayer=NULL,
-                   out="plot", cn_boundary = c(1.8, 2.2))
+cnView <- function(x,
+                   y = NULL,
+                   z = NULL,
+                   genome = 'hg19',
+                   chr = 'chr1',
+                   CNscale = "absolute",
+                   ideogram_txtAngle = 45,
+                   ideogram_txtSize = 5,
+                   plotLayer = NULL,
+                   ideogramLayer = NULL,
+                   out = "plot",
+                   cn_boundary = c(1.8, 2.2),
+                   gr = NULL
+)
 {
   # Perform a basic quality check
   input <- GenVisR:::cnView_qual(x, y, z, genome, CNscale=CNscale)
@@ -299,27 +312,83 @@ cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
   dummyData <- GenVisR:::multi_subsetChr(dummyData, chr)
 
   # Plot all chromosomes at once if specified
-  if(chr == 'all')
-  {
-    # plot the graphic
-    p1 <- cnView_buildMain(x, z=z, dummyData, chr=chr, CNscale = CNscale, cn_boundary = cn_boundary)
-  } else {
-    # plot chromosome
-    chromosome_plot <- GenVisR:::ideoView(cytobands, chromosome=chr,
-                                          txtAngle=ideogram_txtAngle,
-                                          txtSize=ideogram_txtSize,
-                                          plotLayer=ideogramLayer)
-
-    # if requested plot only selected chromosome
-    x <- GenVisR:::multi_subsetChr(x, chr)
-    if(!is.null(z))
-    {
-      z <- GenVisR:::multi_subsetChr(z, chr)
+  if (is.null(gr)) {
+    if(chr == 'all') {
+      # plot the graphic
+      p1 <-
+        cnView_buildMain(
+          x,
+          z = z,
+          dummyData,
+          chr = chr,
+          CNscale = CNscale,
+          cn_boundary = cn_boundary
+        )
+    } else {
+      # plot chromosome
+      chromosome_plot <-
+        GenVisR:::ideoView(
+          cytobands,
+          chromosome = chr,
+          txtAngle = ideogram_txtAngle,
+          txtSize = ideogram_txtSize,
+          plotLayer = ideogramLayer
+        )
+      # if requested plot only selected chromosome
+      x <- GenVisR:::multi_subsetChr(x, chr)
+      if(!is.null(z)) {
+        z <- GenVisR:::multi_subsetChr(z, chr)
+      }
+      # build the plot
+      CN_plot <-
+        cnView_buildMain(
+          x,
+          dummyData,
+          z = z,
+          chr = chr,
+          CNscale = CNscale,
+          layers = plotLayer,
+          cn_boundary = cn_boundary
+        )
     }
-
-    # build the plot
-    CN_plot <- cnView_buildMain(x, dummyData, z=z, chr=chr, CNscale=CNscale,
-                                layers=plotLayer, cn_boundary = cn_boundary)
+  } else {
+    # Use the first one if there are many GRanges.
+    gr <- gr[1]
+    gr_df <- GenomicRanges::mcols(gr)
+    if (!"name" %in% colnames(gr_df)) {
+      stop("Require name column in meta data frame of gr.")
+    }
+    if (!"thick" %in% colnames(gr_df)) {
+      stop("Require thick column in meta data frame of gr.")
+    } else {
+      if (!inherits(gr_df$thick, "IRanges")) {
+        stop("Thick column in meta data frame of gr should be IRanges class.")
+      }
+    }
+    p1 <-
+      cnView_buildMain(
+        x,
+        z = z,
+        dummyData,
+        chr = as.character(GenomicRanges::seqnames(gr)),
+        CNscale = CNscale,
+        cn_boundary = cn_boundary
+      ) +
+      ggplot2::lims(x = c(
+        GenomicRanges::start(gr_df$thick),
+        GenomicRanges::end(gr_df$thick)
+      )) +
+      ggplot2::geom_segment(
+        x = GenomicRanges::start(gr),
+        y = 0.2,
+        xend = GenomicRanges::end(gr),
+        yend = 0.2,
+        size = 3,
+        colour = "black",
+        alpha = 0.5
+      ) +
+      ggplot2::xlab(as.character(gr_df$name)) +
+      ggplot2::theme(legend.position = "none")
   }
 
   # Decide what to output
