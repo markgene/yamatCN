@@ -447,7 +447,7 @@ cnView <- function(x,
 #'   the absolute value, so 2 means no copy number change. Default to
 #'   \code{c(1.8, 2.2)}.
 #' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
-#'   extremely large. The will set the values larger than \code{max_cn} to
+#'   extremely large. The will remove the data points whose CN are greater than
 #'   \code{max_cn}. Default to 6.
 #' @return ggplot2 object
 #' @noRd
@@ -469,7 +469,7 @@ cnView_buildMain <-
         alpha = 0
       )
     # Replace extremely large CN with max_cn.
-    x$cn <- ifelse(x$cn > max_cn, max_cn, x$cn)
+    x <- x[x$cn < max_cn, ]
 
     theme <- ggplot2::theme(
       legend.position = "top",
