@@ -284,7 +284,7 @@ cnView_buildMain <-
           y = segmean,
           yend = segmean
         ),
-        color = "white",
+        color = "gray80",
         size = 1
       ) -> cnseg
     z %>%
