@@ -21,12 +21,12 @@ report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
   verbose = TRUE)
 
 \S4method{report_pipe}{ConumeePipe}(x, outdir,
-  genome_plot_file = "genome-plot-conumee.png", genome_plot_width = 9,
+  genome_plot_file = "genome-plot.png", genome_plot_width = 9,
   genome_plot_height = 15, chr_per_row = 4, chr_plot_width = 9,
   chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.8, 2.2),
-  segment_file = "segments-conumee.tab",
-  igv_segment_file = "igv-segments.tab", detail_plot_height = 7,
-  detail_plot_width = 5, overwrite = FALSE, verbose = TRUE)
+  segment_file = "segments.tab", igv_segment_file = "igv-segments.tab",
+  detail_plot_height = 7, detail_plot_width = 5, overwrite = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{x}{An object.}
