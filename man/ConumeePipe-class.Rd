@@ -13,7 +13,7 @@ Conumee CNV pipeline
 \describe{
 \item{\code{dat}}{An environment which has the following objects:
 \itemize{
-  \item \code{minfi_obj}: an object of
+  \item \code{minfi}: an object of
     \code{\link[minfi]{GenomicRatioSet-class}} or
     \code{\link[minfi]{GenomicMethylSet-class}}.
   \item \code{conumee_results}: a list of \code{\link[conumee]{CNV.analysis-class}}.

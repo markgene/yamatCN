@@ -4,6 +4,7 @@
 \name{report_pipe}
 \alias{report_pipe}
 \alias{report_pipe,CwobPipe-method}
+\alias{report_pipe,ConumeePipe-method}
 \title{Report an object of pipeline classes.}
 \usage{
 report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
@@ -16,7 +17,15 @@ report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
   genome_plot_file = "genome-plot-cwob.png", genome_plot_width = 9,
   genome_plot_height = 15, chr_per_row = 4, chr_plot_width = 9,
   chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.8, 2.2),
-  segment_file = "segments.tab", overwrite = FALSE, verbose = TRUE)
+  segment_file = "segments-cwob.tab", overwrite = FALSE,
+  verbose = TRUE)
+
+\S4method{report_pipe}{ConumeePipe}(x, outdir,
+  genome_plot_file = "genome-plot-conumee.png", genome_plot_width = 9,
+  genome_plot_height = 15, chr_per_row = 4, chr_plot_width = 9,
+  chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.8, 2.2),
+  segment_file = "segments-conumee.tab", overwrite = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{x}{An object.}
@@ -49,7 +58,7 @@ the absolute value, so 2 means no copy number change. Default to
 \code{c(1.8, 2.2)}.}
 
 \item{segment_file}{A character scalar of segments file which is a table of
-segments. Default to "segments.tab".}
+segments. Default to "segments-cwob.tab".}
 
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
@@ -66,5 +75,7 @@ Report an object of pipeline classes.
 \section{Methods (by class)}{
 \itemize{
 \item \code{CwobPipe}: x is \code{CwobPipe}.
+
+\item \code{ConumeePipe}: x is \code{ConumeePipe}.
 }}
 

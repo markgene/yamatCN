@@ -184,7 +184,7 @@ conumee_backbone <- function(x,
   # Create ConumeePipe object
   dat <- new.env(parent = parent.frame())
   dat$conumee_results <- cnv_results
-  dat$minfi_obj <- x
+  dat$minfi <- x
   cp_obj <- ConumeePipe(dat = dat)
   # Save the result
   if (is.null(pipe_file)) {
