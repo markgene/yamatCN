@@ -161,8 +161,16 @@ cnView <- function(x, y=NULL, z=NULL, genome='hg19', chr='chr1',
 #'   \code{c(1.8, 2.2)}.
 #' @return ggplot2 object
 #' @noRd
-cnView_buildMain <- function(x, y, z=NULL, chr, CNscale=FALSE, layers=NULL, cn_boundary = c(1.8, 2.2)) {
+cnView_buildMain <-
+  function(x,
+           y,
+           z = NULL,
+           chr,
+           CNscale = c("absolute", "relative"),
+           layers = NULL,
+           cn_boundary = c(1.8, 2.2)) {
   # Define various parameters of the plot
+  CNscale <- match.arg(CNscale)
   dummy_data <-
     ggplot2::geom_point(
       data = y,
