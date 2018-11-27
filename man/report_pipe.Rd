@@ -24,7 +24,8 @@ report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
   genome_plot_file = "genome-plot-conumee.png", genome_plot_width = 9,
   genome_plot_height = 15, chr_per_row = 4, chr_plot_width = 9,
   chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.8, 2.2),
-  segment_file = "segments-conumee.tab", overwrite = FALSE,
+  segment_file = "segments-conumee.tab",
+  igv_segment_file = "igv-segments.tab", overwrite = FALSE,
   verbose = TRUE)
 }
 \arguments{
@@ -65,6 +66,9 @@ segments. Default to "segments-cwob.tab".}
 \item{verbose}{A logical scalar. Default to TRUE.}
 
 \item{...}{Any other arguments.}
+
+\item{igv_segment_file}{A character scalar of segments file which is a table of
+segments. Default to "igv-segments.tab".}
 }
 \value{
 TBD.
