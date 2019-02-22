@@ -17,6 +17,9 @@
 #'   do not remove batch effect.
 #' @param batch2 optional factor or vector indicating a second series of
 #'   batches. Default to \code{NULL}, - do not remove batch effect.
+#' @param batch_effect_method A character scalar of methods, including
+#'   "mum" (methylation and unmethylation separately), "cn" (copy number),
+#'   "beta" (beta-value). Default to "cn".
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @return An object of \code{\link[minfi]{GenomicMethylSet-class}} or
@@ -33,6 +36,7 @@ preprocess <-
            norm_method = c("swan", "illumina", "raw", "quantile", "noob", "funnorm", "yamat", "dkfz", "methylcnv"),
            batch = NULL,
            batch2 = NULL,
+           batch_effect_method = "cn",
            overwrite = FALSE,
            verbose = TRUE) {
     # Check arguments.
@@ -58,7 +62,11 @@ preprocess <-
         message("Removing batch effects...")
         tictoc::tic()
       }
-      x <- yamat::remove_batch_effect(x, batch = batch, batch2 = batch2)
+      x <-
+        yamat::remove_batch_effect(x,
+                                   batch = batch,
+                                   batch2 = batch2,
+                                   method = batch_effect_method)
       if (verbose) tictoc::toc()
     }
     x
