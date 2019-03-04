@@ -151,7 +151,7 @@
 #' @param gender A character scalar of gender. It is coded as either "M" or "F".
 #' @param scaled Character string specifying if copy number calls supplied are
 #' relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One of
-#' "relative" or "absolute"
+#' "relative" or "absolute".
 #' @return A list of two elements:
 #'   \itemize{
 #'     \item \code{lrr}: A \code{data.frame} of LRRs which has three columns,
@@ -469,7 +469,8 @@ cnView_buildMain <-
         alpha = 0
       )
     # Replace extremely large CN with max_cn.
-    x <- x[x$cn < max_cn, ]
+    # x <- x[x$cn < max_cn, ]
+    x$cn[x$cn > max_cn] <- max_cn
 
     theme <- ggplot2::theme(
       legend.position = "top",

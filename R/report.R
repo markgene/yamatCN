@@ -173,6 +173,12 @@ setMethod(
 #'   segments. Default to "igv-segments.tab".
 #' @param detail_plot_height An integer scalar. Default to 7.
 #' @param detail_plot_width An integer scalar. Default to 5.
+#' @param CNscale Character string specifying if copy number calls supplied are
+#'   relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One
+#'   of "relative" or "absolute".
+#' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
+#'   extremely large. The will remove the data points whose CN are greater than
+#'   \code{max_cn}. Default to 6.
 setMethod(
   f = "report_pipe",
   signature = c(x = "ConumeePipe"),
@@ -225,6 +231,7 @@ setMethod(
             CNscale = CNscale,
             cn_boundary = cn_boundary
           ) +
+            ggplot2::ylim(0, max_cn) +
             ggplot2::facet_wrap( ~ chromosome, scales = "free_x", ncol = chr_per_row)
           ggplot2::ggsave(
             filename = plot_file,
