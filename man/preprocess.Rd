@@ -6,7 +6,8 @@
 \usage{
 preprocess(ref, qry, norm_method = c("swan", "illumina", "raw",
   "quantile", "noob", "funnorm", "yamat", "dkfz", "methylcnv"),
-  batch = NULL, batch2 = NULL, overwrite = FALSE, verbose = TRUE)
+  batch = NULL, batch2 = NULL, batch_effect_method = "cn",
+  overwrite = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{ref}{Reference samples stored in an object of
@@ -24,6 +25,10 @@ do not remove batch effect.}
 
 \item{batch2}{optional factor or vector indicating a second series of
 batches. Default to \code{NULL}, - do not remove batch effect.}
+
+\item{batch_effect_method}{A character scalar of methods, including
+"mum" (methylation and unmethylation separately), "cn" (copy number),
+"beta" (beta-value). Default to "cn".}
 
 \item{overwrite}{A logical scalar. Default to FALSE.}
 

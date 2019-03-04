@@ -6,8 +6,9 @@
 \usage{
 conumee_pipe(ref, qry, report_dir, norm_method = c("swan", "illumina",
   "raw", "quantile", "noob", "funnorm", "yamat", "dkfz", "methylcnv"),
-  batch = NULL, batch2 = NULL, pipe_file = "conumee.Rda",
-  dnacopy_seed = 1, overwrite = FALSE, verbose = TRUE, ...)
+  batch = NULL, batch2 = NULL, batch_effect_method = c("cn", "mum",
+  "beta"), pipe_file = "conumee.Rda", dnacopy_seed = 1,
+  overwrite = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{ref}{Reference samples stored in an object of
@@ -27,6 +28,10 @@ do not remove batch effect.}
 
 \item{batch2}{optional factor or vector indicating a second series of
 batches. Default to \code{NULL}, - do not remove batch effect.}
+
+\item{batch_effect_method}{A character scalar of methods, including
+"mum" (methylation and unmethylation separately), "cn" (copy number),
+"beta" (beta-value). Default to "cn".}
 
 \item{pipe_file}{A character scalar of the filename storing the pipeline
 result sample by sample. Default to "conumee.Rda". Turn off the saving by
