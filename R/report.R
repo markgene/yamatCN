@@ -20,7 +20,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.8, 2.2)}.
+#'   \code{c(1.319508, 2.828427)}.
 #' @param segment_file A character scalar of segments file which is a table of
 #'   segments. Default to "segments-cwob.tab".
 #' @param overwrite A logical scalar. Default to FALSE.
@@ -39,7 +39,7 @@ setGeneric(
                  chr_plot_width = 9,
                  chr_plot_height = 6,
                  size = 5e6,
-                 cn_boundary = c(1.8, 2.2),
+                 cn_boundary = c(1.319508, 2.828427),
                  segment_file = "segments.tab",
                  overwrite = FALSE,
                  verbose = TRUE,
@@ -62,7 +62,7 @@ setMethod(
                         chr_plot_width = 9,
                         chr_plot_height = 6,
                         size = 5e6,
-                        cn_boundary = c(1.8, 2.2),
+                        cn_boundary = c(1.319508, 2.828427),
                         segment_file = "segments-cwob.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {
@@ -185,15 +185,16 @@ setMethod(
                         chr_plot_width = 9,
                         chr_plot_height = 6,
                         size = 5e6,
-                        cn_boundary = c(1.8, 2.2),
+                        CNscale = "absolute",
+                        cn_boundary = c(1.319508, 2.828427),
                         segment_file = "segments.tab",
                         igv_segment_file = "igv-segments.tab",
                         detail_plot_height = 7,
                         detail_plot_width = 5,
+                        max_cn = 6,
                         overwrite = FALSE,
                         verbose = TRUE) {
     # Check argument
-    CNscale <- "absolute"
     if (missing(igv_segment_file) | !igv_segment_file)
       igv_segment_file <- "igv-segments.tab"
     if (missing(detail_plot_height) | !is.numeric(detail_plot_height))

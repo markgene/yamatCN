@@ -10,7 +10,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.8, 2.2)}.
+#'   \code{c(1.319508, 2.828427)}.
 #' @param chr_per_row An integer scalar of chromosome per row in the plot.
 #'   Default to 4.
 #' @return A \code{\link{ggplot2}{ggplot}} object.
@@ -19,7 +19,7 @@
   function(x,
            sample_id,
            gender = c("M", "F"),
-           cn_boundary = c(1.8, 2.2),
+           cn_boundary = c(1.319508, 2.828427),
            chr_per_row = 4) {
     dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
     cnView(
@@ -46,7 +46,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.8, 2.2)}.
+#'   \code{c(1.319508, 2.828427)}.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @return A list of \code{\link[gtable]{gtable}} class.
 #' @noRd
@@ -55,7 +55,7 @@
            sample_id,
            gender = c("M", "F"),
            size = 5e6,
-           cn_boundary = c(1.8, 2.2),
+           cn_boundary = c(1.319508, 2.828427),
            verbose = TRUE) {
     dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
     dat$z %>%
@@ -256,7 +256,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.8, 2.2)}.
+#'   \code{c(1.319508, 2.828427)}.
 #' @param gr A genomic range of \code{\link[GenomicRanges]{GRanges}} class.
 #'   If it is provided, neglect \code{chr} and plot the region defined. Default
 #'   to \code{NULL}.
@@ -291,7 +291,7 @@ cnView <- function(x,
                    plotLayer = NULL,
                    ideogramLayer = NULL,
                    out = "plot",
-                   cn_boundary = c(1.8, 2.2),
+                   cn_boundary = c(1.319508, 2.828427),
                    gr = NULL
 )
 {
@@ -445,7 +445,7 @@ cnView <- function(x,
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.8, 2.2)}.
+#'   \code{c(1.319508, 2.828427)}.
 #' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
 #'   extremely large. The will remove the data points whose CN are greater than
 #'   \code{max_cn}. Default to 6.
@@ -458,7 +458,7 @@ cnView_buildMain <-
            chr,
            CNscale = c("absolute", "relative"),
            layers = NULL,
-           cn_boundary = c(1.8, 2.2),
+           cn_boundary = c(1.319508, 2.828427),
            max_cn = 6) {
     # Define various parameters of the plot
     CNscale <- match.arg(CNscale)
