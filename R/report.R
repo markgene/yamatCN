@@ -234,14 +234,17 @@ setMethod(
           )
         }
         # Segment file
+        cnv_res@seg$summary %>%
+          dplyr::mutate(seg.mean.shifted = seg.mean - cnv_res@bin$shift) %>%
+          dplyr::mutate(cn.shifted = .to_absolute(seg.mean.shifted)) -> segment_df
         segment_file <- file.path(sample_dirs[i], segment_file)
         if (overwrite | !file.exists(segment_file)) {
-          write.table(x = cnv_res@seg$summary, file = segment_file, quote = FALSE, row.names = FALSE)
+          write.table(x = segment_df, file = segment_file, quote = FALSE, row.names = FALSE)
         }
         # IGV segment file
         igv_segment_file <- file.path(sample_dirs[i], igv_segment_file)
         if (overwrite | !file.exists(igv_segment_file)) {
-          igv_seg_df <- .to_igv_segment(cnv_res@seg$summary, cnv_res@name)
+          igv_seg_df <- .to_igv_segment(segment_df, cnv_res@name)
           write.table(x = igv_seg_df, file = igv_segment_file, quote = FALSE, row.names = FALSE)
         }
         # Plot detail regions
