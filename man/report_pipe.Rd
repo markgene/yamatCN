@@ -11,13 +11,16 @@ report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
   genome_plot_width = 9, genome_plot_height = 15, chr_per_row = 4,
   chr_plot_width = 9, chr_plot_height = 6, size = 5e+06,
   cn_boundary = c(1.319508, 2.828427), segment_file = "segments.tab",
-  overwrite = FALSE, verbose = TRUE, ...)
+  igv_segment_file = "igv-segments.tab",
+  shiny_segment_file = "shiny-segments.tab", overwrite = FALSE,
+  verbose = TRUE, ...)
 
 \S4method{report_pipe}{CwobPipe}(x, outdir,
   genome_plot_file = "genome-plot-cwob.png", genome_plot_width = 9,
   genome_plot_height = 15, chr_per_row = 4, chr_plot_width = 9,
   chr_plot_height = 6, size = 5e+06, cn_boundary = c(1.319508,
-  2.828427), segment_file = "segments-cwob.tab", overwrite = FALSE,
+  2.828427), segment_file = "segments-cwob.tab",
+  igv_segment_file = "igv-segments-cwob.tab", overwrite = FALSE,
   verbose = TRUE)
 
 \S4method{report_pipe}{ConumeePipe}(x, outdir,
@@ -25,7 +28,8 @@ report_pipe(x, outdir, genome_plot_file = "genome-plot.png",
   genome_plot_height = 15, chr_per_row = 4, chr_plot_width = 9,
   chr_plot_height = 6, size = 5e+06, CNscale = "absolute",
   cn_boundary = c(1.319508, 2.828427), segment_file = "segments.tab",
-  igv_segment_file = "igv-segments.tab", detail_plot_height = 7,
+  igv_segment_file = "igv-segments.tab",
+  shiny_segment_file = "shiny-segments.tab", detail_plot_height = 7,
   detail_plot_width = 5, max_cn = 6, overwrite = FALSE,
   verbose = TRUE)
 }
@@ -62,6 +66,12 @@ the absolute value, so 2 means no copy number change. Default to
 \item{segment_file}{A character scalar of segments file which is a table of
 segments. Default to "segments-cwob.tab".}
 
+\item{igv_segment_file}{A character scalar of segments file which is a table of
+segments. Default to "igv-segments.tab".}
+
+\item{shiny_segment_file}{A character scalar of segments file which is a table of
+segments. Default to "shiny-segments.tab".}
+
 \item{overwrite}{A logical scalar. Default to FALSE.}
 
 \item{verbose}{A logical scalar. Default to TRUE.}
@@ -71,9 +81,6 @@ segments. Default to "segments-cwob.tab".}
 \item{CNscale}{Character string specifying if copy number calls supplied are
 relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One
 of "relative" or "absolute".}
-
-\item{igv_segment_file}{A character scalar of segments file which is a table of
-segments. Default to "igv-segments.tab".}
 
 \item{detail_plot_height}{An integer scalar. Default to 7.}
 

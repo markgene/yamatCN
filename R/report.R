@@ -23,6 +23,10 @@
 #'   \code{c(1.319508, 2.828427)}.
 #' @param segment_file A character scalar of segments file which is a table of
 #'   segments. Default to "segments-cwob.tab".
+#' @param igv_segment_file A character scalar of segments file which is a table of
+#'   segments. Default to "igv-segments.tab".
+#' @param shiny_segment_file A character scalar of segments file which is a table of
+#'   segments. Default to "shiny-segments.tab".
 #' @param overwrite A logical scalar. Default to FALSE.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @param ... Any other arguments.
@@ -41,6 +45,8 @@ setGeneric(
                  size = 5e6,
                  cn_boundary = c(1.319508, 2.828427),
                  segment_file = "segments.tab",
+                 igv_segment_file = "igv-segments.tab",
+                 shiny_segment_file = "shiny-segments.tab",
                  overwrite = FALSE,
                  verbose = TRUE,
                  ...) {
@@ -64,6 +70,7 @@ setMethod(
                         size = 5e6,
                         cn_boundary = c(1.319508, 2.828427),
                         segment_file = "segments-cwob.tab",
+                        igv_segment_file = "igv-segments-cwob.tab",
                         overwrite = FALSE,
                         verbose = TRUE) {
     qry_idx <- .query_indices(x@dat$minfi, label = "query")
@@ -169,8 +176,6 @@ setMethod(
 
 
 #' @describeIn report_pipe x is \code{ConumeePipe}.
-#' @param igv_segment_file A character scalar of segments file which is a table of
-#'   segments. Default to "igv-segments.tab".
 #' @param detail_plot_height An integer scalar. Default to 7.
 #' @param detail_plot_width An integer scalar. Default to 5.
 #' @param CNscale Character string specifying if copy number calls supplied are
@@ -195,14 +200,18 @@ setMethod(
                         cn_boundary = c(1.319508, 2.828427),
                         segment_file = "segments.tab",
                         igv_segment_file = "igv-segments.tab",
+                        shiny_segment_file = "shiny-segments.tab",
                         detail_plot_height = 7,
                         detail_plot_width = 5,
                         max_cn = 6,
                         overwrite = FALSE,
                         verbose = TRUE) {
     # Check argument
-    if (missing(igv_segment_file) | !igv_segment_file)
+    print(igv_segment_file)
+    if (missing(igv_segment_file))
       igv_segment_file <- "igv-segments.tab"
+    if (missing(shiny_segment_file))
+      shiny_segment_file <- "shiny-segments.tab"
     if (missing(detail_plot_height) | !is.numeric(detail_plot_height))
       detail_plot_height <- 7
     if (missing(detail_plot_width) | !is.numeric(detail_plot_width))
@@ -253,6 +262,12 @@ setMethod(
         if (overwrite | !file.exists(igv_segment_file)) {
           igv_seg_df <- .to_igv_segment(segment_df, cnv_res@name)
           write.table(x = igv_seg_df, file = igv_segment_file, quote = FALSE, row.names = FALSE)
+        }
+        # Shiny segment file
+        shiny_segment_file <- file.path(sample_dirs[i], shiny_segment_file)
+        if (overwrite | !file.exists(shiny_segment_file)) {
+          shiny_seg_df <- .to_shiny_segment(segment_df, cnv_res@name, gender = gender)
+          write.table(x = shiny_seg_df, file = shiny_segment_file, quote = FALSE, row.names = FALSE)
         }
         # Plot detail regions
         grs <- cnv_res@anno@detail
