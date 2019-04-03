@@ -207,7 +207,6 @@ setMethod(
                         overwrite = FALSE,
                         verbose = TRUE) {
     # Check argument
-    print(igv_segment_file)
     if (missing(igv_segment_file))
       igv_segment_file <- "igv-segments.tab"
     if (missing(shiny_segment_file))
@@ -220,6 +219,14 @@ setMethod(
     sample_dirs <- yamat::init_report(x@dat$minfi[, qry_idx], outdir)
     # Gender
     gender <- .gender(x@dat$minfi[, qry_idx])
+    # Beta
+    beta_values <- minfi::getBeta(x@dat$minfi[, qry_idx])
+    # Annotation
+    anno_df <- minfi::getAnnotation(x@dat$minfi[, 1]) %>%
+      as.data.frame() %>%
+      dplyr::select(chr, pos) %>%
+      dplyr::rename(Chromosome = chr, Position = pos)
+    anno_df$Chromosome <- stringr::str_remove(anno_df$Chromosome , "chr")
     # Sample by sample
     res <- lapply(
       seq(length(x@dat$conumee_results)),
@@ -299,6 +306,26 @@ setMethod(
             }
           }
         )
+        # Save Shiny data
+        bval <- beta_values[, i, drop = TRUE]
+        bval <- bval[names(bval) %in% names(cnv_res@fit$ratio)]
+        shiny_df <- anno_df[rownames(anno_df) %in% names(cnv_res@fit$ratio), ]
+        if (all(names(bval) == names(cnv_res@fit$ratio)) &
+            all(rownames(shiny_df) == names(cnv_res@fit$ratio))) {
+          shiny_df %>%
+            dplyr::mutate(
+              Name = names(cnv_res@fit$ratio),
+              LRR = cnv_res@fit$ratio,
+              Beta_value = bval
+            ) %>%
+            dplyr::select(Name, Chromosome, Position, LRR, Beta_value) -> shiny_df
+          shiny_dat_file <- paste0(cnv_res@name, ".txt")
+          shiny_dat_file <- file.path(sample_dirs[i], shiny_dat_file)
+          write.table(x = shiny_df, file = shiny_dat_file, sep = "\t", quote = FALSE, row.names = FALSE)
+          R.utils::gzip(shiny_dat_file)
+        } else {
+          stop("Need to be fixed.")
+        }
       }
     )
   }
