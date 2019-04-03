@@ -257,9 +257,7 @@ setMethod(
           )
         }
         # Segment file
-        cnv_res@seg$summary %>%
-          dplyr::mutate(seg.mean.shifted = seg.mean - cnv_res@bin$shift) %>%
-          dplyr::mutate(cn.shifted = .to_absolute(seg.mean.shifted)) -> segment_df
+        segment_df <- cnv_res@seg$summary
         segment_file <- file.path(sample_dirs[i], segment_file)
         if (overwrite | !file.exists(segment_file)) {
           write.table(x = segment_df, file = segment_file, sep = "\t", quote = FALSE, row.names = FALSE)

@@ -115,7 +115,14 @@ conumee_analysis <- function(query, ref, anno, intercept = TRUE, seed = 1, ...) 
     conumee::CNV.bin() %>%
     conumee::CNV.detail() -> cnv_anl
   set.seed(seed)
-  conumee::CNV.segment(cnv_anl, ...)
+  conumee::CNV.segment(cnv_anl, ...) -> cnv_anl
+  cnv_anl@seg$summary %>%
+    dplyr::mutate(seg.mean.shifted = seg.mean - cnv_anl@bin$shift) %>%
+    dplyr::mutate(cn.shifted = .to_absolute(seg.mean.shifted)) %>%
+    .add_cytoband_to_df(.) %>%
+    .add_detail_regions_to_df(.) -> segment_df
+  cnv_anl@seg$summary <- segment_df
+  cnv_anl
 }
 
 
