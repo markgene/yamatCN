@@ -265,3 +265,21 @@ conumee_backbone <- function(x,
   df$cytoband[ovlp_summary$queryHits] <- ovlp_summary$cytoband
   df
 }
+
+#' Add detailed regions to segment summary \code{data.frame}.
+#' @noRd
+.add_detail_regions_to_df <- function(df) {
+  dr_gr <- detail_regions()
+  gr <- GenomicRanges::makeGRangesFromDataFrame(df, start.field = "loc.start", end.field = "loc.end")
+  ovlp_df <- GenomicRanges::findOverlaps(gr, dr_gr) %>%
+    as.data.frame()
+  ovlp_df$detail_region <- mcols(dr_gr)$name[ovlp_df$subjectHits]
+  ovlp_summary <- ovlp_df %>%
+    dplyr::group_by(queryHits) %>%
+    dplyr::summarise(dr = paste(detail_region, sep = ", ", collapse = ", ")) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(queryHits, dr)
+  df$detail_region <- ""
+  df$detail_region[ovlp_summary$queryHits] <- ovlp_summary$dr
+  df
+}
