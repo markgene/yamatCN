@@ -229,41 +229,6 @@ summarize_dnacopy_segments <- function(x, ...) {
 }
 
 
-#' Convert a summary \code{data.frame} to IGV CBS format.
-#' @noRd
-.to_igv_segment <- function(summary_df, sample_id) {
-  summary_df %>%
-    dplyr::mutate(Sample = sample_id) %>%
-    dplyr::mutate(Chromosome = stringr::str_remove_all(chrom, "^chr")) %>%
-    dplyr::rename(Start = loc.start, End = loc.end, Num_Probes = num.mark, Segment_Mean = seg.mean) %>%
-    dplyr::select(Sample, Chromosome, Start, End, Num_Probes, Segment_Mean)
-}
-
-
-#' Convert to Shiny segments.
-#'
-#' @noRd
-.to_shiny_segment <- function(summary_df, sample_id, gender = c("Female", "Male")) {
-  gender <- match.arg(gender)
-  summary_df %>%
-    dplyr::mutate(
-      index = seq_len(nrow(summary_df)),
-      caseID = sample_id,
-      controlID = sample_id,
-      chr = stringr::str_remove_all(chrom, "^chr"),
-      CN = round(cn.shifted),
-      normRate = 0,
-      gender = gender,
-      paired = "No"
-    ) %>%
-    dplyr::rename(
-      start = loc.start,
-      end = loc.end
-    ) %>%
-    dplyr::select(index, caseID, controlID, chr, start, end, CN, normRate, gender, paired)
-}
-
-
 #' Convert LRR to absolute copy number (neutral state == 2).
 #' @noRd
 .to_absolute <- function(lrr) { 2 ** (lrr * 2 + 1)}
