@@ -237,3 +237,31 @@ conumee_backbone <- function(x,
     ) %>%
     dplyr::select(index, caseID, controlID, chr, start, end, CN, gender, cytoband, detail_region)
 }
+
+
+#' Add cytoband to segment summary \code{data.frame}.
+#' @noRd
+.add_cytoband_to_df <- function(df) {
+  cytobands_file <- system.file("extdata", "cytoBands.txt", package = "yamatCN")
+  cytobands_df <- read.table(cytobands_file, stringsAsFactors = FALSE)
+  colnames(cytobands_df) <- c("chrom", "start", "end", "name", "gieStain")
+  cytobands_gr <- GenomicRanges::makeGRangesFromDataFrame(cytobands_df, keep.extra.columns = TRUE)
+  gr <- GenomicRanges::makeGRangesFromDataFrame(df, start.field = "loc.start", end.field = "loc.end")
+  ovlp_df <- GenomicRanges::findOverlaps(gr, cytobands_gr) %>%
+    as.data.frame()
+  ovlp_df$cytoband <- mcols(cytobands_gr)$name[ovlp_df$subjectHits]
+  ovlp_summary <- ovlp_df %>%
+    dplyr::group_by(queryHits) %>%
+    dplyr::summarise(first_band = dplyr::first(cytoband),
+                     last_band  = dplyr::last(cytoband)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(cytoband = ifelse(
+      first_band == last_band,
+      first_band,
+      paste(first_band, last_band, sep = "-")
+    )) %>%
+    dplyr::select(queryHits, cytoband)
+  df$cytoband <- ""
+  df$cytoband[ovlp_summary$queryHits] <- ovlp_summary$cytoband
+  df
+}
