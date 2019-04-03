@@ -255,19 +255,19 @@ setMethod(
           dplyr::mutate(cn.shifted = .to_absolute(seg.mean.shifted)) -> segment_df
         segment_file <- file.path(sample_dirs[i], segment_file)
         if (overwrite | !file.exists(segment_file)) {
-          write.table(x = segment_df, file = segment_file, quote = FALSE, row.names = FALSE)
+          write.table(x = segment_df, file = segment_file, sep = "\t", quote = FALSE, row.names = FALSE)
         }
         # IGV segment file
         igv_segment_file <- file.path(sample_dirs[i], igv_segment_file)
         if (overwrite | !file.exists(igv_segment_file)) {
           igv_seg_df <- .to_igv_segment(segment_df, cnv_res@name)
-          write.table(x = igv_seg_df, file = igv_segment_file, quote = FALSE, row.names = FALSE)
+          write.table(x = igv_seg_df, file = igv_segment_file, sep = "\t", quote = FALSE, row.names = FALSE)
         }
         # Shiny segment file
         shiny_segment_file <- file.path(sample_dirs[i], shiny_segment_file)
         if (overwrite | !file.exists(shiny_segment_file)) {
           shiny_seg_df <- .to_shiny_segment(segment_df, cnv_res@name, gender = gender)
-          write.table(x = shiny_seg_df, file = shiny_segment_file, quote = FALSE, row.names = FALSE)
+          write.table(x = shiny_seg_df, file = shiny_segment_file, sep = "\t", quote = FALSE, row.names = FALSE)
         }
         # Plot detail regions
         grs <- cnv_res@anno@detail
