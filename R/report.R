@@ -274,6 +274,29 @@ setMethod(
           shiny_seg_df <- .to_shiny_segment(segment_df, cnv_res@name, gender = gender)
           write.table(x = shiny_seg_df, file = shiny_segment_file, sep = "\t", quote = FALSE, row.names = FALSE)
         }
+        # Save Shiny data
+        shiny_dat_file <- file.path(sample_dirs[i], paste0(cnv_res@name, ".txt"))
+        shiny_dat_gz_file <- file.path(sample_dirs[i], paste0(cnv_res@name, ".txt.gz"))
+        if (overwrite | !file.exists(shiny_dat_gz_file)) {
+          bval <- beta_values[, i, drop = TRUE]
+          bval <- bval[names(bval) %in% names(cnv_res@fit$ratio)]
+          shiny_df <- anno_df[rownames(anno_df) %in% names(cnv_res@fit$ratio), ]
+          if (all(names(bval) == names(cnv_res@fit$ratio)) &
+              all(rownames(shiny_df) == names(cnv_res@fit$ratio))) {
+            shiny_df %>%
+              dplyr::mutate(
+                Name = names(cnv_res@fit$ratio),
+                LRR = cnv_res@fit$ratio,
+                Beta_value = bval
+              ) %>%
+              dplyr::select(Name, Chromosome, Position, LRR, Beta_value) -> shiny_df
+
+            write.table(x = shiny_df, file = shiny_dat_file, sep = "\t", quote = FALSE, row.names = FALSE)
+            R.utils::gzip(shiny_dat_file)
+          } else {
+            stop("Need to be fixed.")
+          }
+        }
         # Plot detail regions
         grs <- cnv_res@anno@detail
         plot_lst <- lapply(
@@ -304,26 +327,6 @@ setMethod(
             }
           }
         )
-        # Save Shiny data
-        bval <- beta_values[, i, drop = TRUE]
-        bval <- bval[names(bval) %in% names(cnv_res@fit$ratio)]
-        shiny_df <- anno_df[rownames(anno_df) %in% names(cnv_res@fit$ratio), ]
-        if (all(names(bval) == names(cnv_res@fit$ratio)) &
-            all(rownames(shiny_df) == names(cnv_res@fit$ratio))) {
-          shiny_df %>%
-            dplyr::mutate(
-              Name = names(cnv_res@fit$ratio),
-              LRR = cnv_res@fit$ratio,
-              Beta_value = bval
-            ) %>%
-            dplyr::select(Name, Chromosome, Position, LRR, Beta_value) -> shiny_df
-          shiny_dat_file <- paste0(cnv_res@name, ".txt")
-          shiny_dat_file <- file.path(sample_dirs[i], shiny_dat_file)
-          write.table(x = shiny_df, file = shiny_dat_file, sep = "\t", quote = FALSE, row.names = FALSE)
-          R.utils::gzip(shiny_dat_file)
-        } else {
-          stop("Need to be fixed.")
-        }
       }
     )
   }

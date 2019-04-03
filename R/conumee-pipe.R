@@ -213,6 +213,7 @@ conumee_backbone <- function(x,
   cp_obj
 }
 
+
 #' Convert a summary \code{data.frame} to IGV CBS format.
 #' @noRd
 .to_igv_segment <- function(summary_df, sample_id) {
