@@ -196,8 +196,8 @@ setMethod(
                         chr_plot_width = 9,
                         chr_plot_height = 6,
                         size = 5e6,
-                        CNscale = "absolute",
-                        cn_boundary = c(1.319508, 2.828427),
+                        CNscale = "relative",
+                        cn_boundary = c(-0.2, 0.15),
                         segment_file = "segments.tab",
                         igv_segment_file = "igv-segments.tab",
                         shiny_segment_file = "shiny-segments.tab",
@@ -247,7 +247,6 @@ setMethod(
             CNscale = CNscale,
             cn_boundary = cn_boundary
           ) +
-            ggplot2::ylim(0, max_cn) +
             ggplot2::facet_wrap( ~ chromosome, scales = "free_x", ncol = chr_per_row)
           ggplot2::ggsave(
             filename = plot_file,
@@ -316,7 +315,7 @@ setMethod(
                 gr = grs[k],
                 genome = "hg19",
                 CNscale = CNscale,
-                cn_boundary = cn_boundary
+                cn_boundary = c(-0.15, 0.1)
               ) %>%
                 ggplot2::ggsave(
                   filename = outfile,

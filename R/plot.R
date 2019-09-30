@@ -468,9 +468,20 @@ cnView_buildMain <-
         mapping = ggplot2::aes_string(x = 'coordinate', y = 2),
         alpha = 0
       )
+    if (CNscale == "relative") {
+      min_cn <- -2
+      max_cn <- 2
+      cn_breaks <- c(-1, -0.5, 0, 0.4)
+      cn_breaks <- c(seq(min_cn, -1), cn_breaks, seq(1, max_cn))
+    } else {
+      min_cn <- 0
+      max_cn <- 6
+      cn_breaks <- c(-0.5, seq(max_cn))
+    }
     # Replace extremely large CN with max_cn.
     # x <- x[x$cn < max_cn, ]
     x$cn[x$cn > max_cn] <- max_cn
+    x$cn[x$cn < min_cn] <- min_cn
 
     theme <- ggplot2::theme(
       legend.position = "top",
@@ -624,8 +635,9 @@ cnView_buildMain <-
       cnseg +
       cnseg1 +
       cnseg2 +
-      ggplot2::lims(y = c(0, max_cn)) +
-      ggplot2::scale_y_continuous(breaks = c(-0.5, seq(max_cn))) +
+      # ggplot2::lims(y = c(0, max_cn)) +
+      # ggplot2::scale_y_continuous(breaks = c(-0.5, seq(max_cn))) +
+      ggplot2::scale_y_continuous(breaks = cn_breaks) +
       ggplot2::scale_x_continuous(breaks = NULL) +
       dummy_data +
       transparency +

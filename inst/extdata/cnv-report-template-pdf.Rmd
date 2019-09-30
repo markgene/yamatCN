@@ -1,0 +1,98 @@
+---
+title: "`r params$title`"
+author: "Molecular Pathology Division, Department of Pathology, SJCRH"
+version: "`r params$version`"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: pdf_document
+params:
+  genome_plot: "genome-plot.png"
+  detail_plot: "detail.png"
+  probe_table: "probes.csv"
+  bin_table: "bins.csv"
+  segment_table: "segments.tab"
+  title: "Methylation Array CNV Report"
+  sample_prep: "N/A"
+  version: "N/A"
+  session_info: "N/A"
+  gender: "N/A"
+  cn_boundary: "N/A"
+  cn_boundary_focal: "N/A"
+  outdir: "`r getwd()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      knitr.kable.NA = '')
+```
+
+```{r}
+library(dplyr)
+library(readr)
+```
+
+
+### Sample information
+
+Gender: `r params$gender`
+
+Sample prep: `r params$sample_prep`
+
+### Genome plot
+
+```{r}
+knitr::include_graphics(params$genome_plot)
+```
+
+### Overall calls
+
+* Cutoff for gain: +0.15 segment mean at 5mb
+* Cutoff for loss: -0.20 at 10 mb
+
+```{r}
+cn_boundary <- params$cn_boundary
+df <- readr::read_delim(file = params$segment_table, delim = "\t")
+if (params$gender == "F") {
+  df <- dplyr::filter(df, chrom != "chrY")
+}
+df %>%
+  dplyr::mutate(segment_size = loc.end - loc.start + 1) %>%
+  dplyr::filter((seg.mean.shifted < cn_boundary[1] & 
+                   segment_size > cn_boundary[3]) | 
+                  (seg.mean.shifted > cn_boundary[2] & 
+                     segment_size > cn_boundary[4])) %>%
+  dplyr::select(chrom, loc.start, loc.end, seg.mean.shifted, cytoband, detail_region) %>%
+  dplyr::rename(Chr = chrom, Start = loc.start, End = loc.end, Mean = seg.mean.shifted, Cytoband = cytoband, Gene = detail_region) %>%
+  dplyr::mutate(Gene = ifelse(is.na(Gene), "", Gene)) %>%
+  knitr::kable()
+```
+
+### Cancer gene calls
+
+Calls contain the following selected genes: CCND1, CDK4, CDK6, CDKN2A/B, EGFR, ERBB2, GLI2, MDM2, MET, MYC, MYCN, NF1, PTCH1, PTEN, RB1, TP53, PDGFRA, C19MC, NF2, CCND2, TERT, MDM4, BRAF, MYB, MYBL1, PPM1D, SMARCB1.
+
+* Cutoff for gain: +0.10 at 500kb
+* Cutoff for loss: -0.15 at 500kb
+
+```{r}
+cn_boundary <- params$cn_boundary_focal
+df <- readr::read_delim(file = params$segment_table, delim = "\t")
+if (params$gender == "F") {
+  df <- dplyr::filter(df, chrom != "chrY")
+}
+df %>%
+  dplyr::filter(!is.na(detail_region)) %>%
+  dplyr::mutate(segment_size = loc.end - loc.start + 1) %>%
+  dplyr::filter((seg.mean.shifted < cn_boundary[1] & 
+                   segment_size > cn_boundary[3]) | 
+                  (seg.mean.shifted > cn_boundary[2] & 
+                     segment_size > cn_boundary[4])) %>%
+  dplyr::select(chrom, loc.start, loc.end, seg.mean.shifted, cytoband, detail_region) %>%
+  dplyr::rename(Chr = chrom, Start = loc.start, End = loc.end, Mean = seg.mean.shifted, Cytoband = cytoband, Gene = detail_region) %>%
+  knitr::kable()
+```
+
+The analysis is carried out R package *yamatCN* version `r params$version`. 
+
+
