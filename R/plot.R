@@ -10,7 +10,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.319508, 2.828427)}.
+#'   \code{c(-0.2, 0.15)}.
 #' @param chr_per_row An integer scalar of chromosome per row in the plot.
 #'   Default to 4.
 #' @return A \code{\link{ggplot2}{ggplot}} object.
@@ -74,7 +74,7 @@
           z = dat$z,
           chr = chr,
           genome = "hg19",
-          CNscale = "absolute",
+          CNscale = "relative",
           cn_boundary = cn_boundary
         )
       }) -> plot_lst
@@ -256,7 +256,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.319508, 2.828427)}.
+#'   \code{c(-0.2, 0.15)}.
 #' @param gr A genomic range of \code{\link[GenomicRanges]{GRanges}} class.
 #'   If it is provided, neglect \code{chr} and plot the region defined. Default
 #'   to \code{NULL}.
@@ -285,13 +285,13 @@ cnView <- function(x,
                    z = NULL,
                    genome = 'hg19',
                    chr = 'chr1',
-                   CNscale = "absolute",
+                   CNscale = "relative",
                    ideogram_txtAngle = 45,
                    ideogram_txtSize = 5,
                    plotLayer = NULL,
                    ideogramLayer = NULL,
                    out = "plot",
-                   cn_boundary = c(1.319508, 2.828427),
+                   cn_boundary = c(-0.2, 0.15),
                    gr = NULL
 )
 {
@@ -445,7 +445,7 @@ cnView <- function(x,
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.319508, 2.828427)}.
+#'   \code{c(-0.2, 0.15)}.
 #' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
 #'   extremely large. The will remove the data points whose CN are greater than
 #'   \code{max_cn}. Default to 6.
@@ -458,7 +458,7 @@ cnView_buildMain <-
            chr,
            CNscale = c("absolute", "relative"),
            layers = NULL,
-           cn_boundary = c(1.319508, 2.828427),
+           cn_boundary = c(-0.2, 0.15),
            max_cn = 6) {
     # Define various parameters of the plot
     CNscale <- match.arg(CNscale)

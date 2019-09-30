@@ -20,7 +20,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.319508, 2.828427)}.
+#'   \code{c(-0.2, 0.15)}.
 #' @param segment_file A character scalar of segments file which is a table of
 #'   segments. Default to "segments-cwob.tab".
 #' @param igv_segment_file A character scalar of segments file which is a table of
@@ -43,7 +43,7 @@ setGeneric(
                  chr_plot_width = 9,
                  chr_plot_height = 6,
                  size = 5e6,
-                 cn_boundary = c(1.319508, 2.828427),
+                 cn_boundary = c(-0.2, 0.15),
                  segment_file = "segments.tab",
                  igv_segment_file = "igv-segments.tab",
                  shiny_segment_file = "shiny-segments.tab",
@@ -68,7 +68,7 @@ setMethod(
                         chr_plot_width = 9,
                         chr_plot_height = 6,
                         size = 5e6,
-                        cn_boundary = c(1.319508, 2.828427),
+                        cn_boundary = c(-0.2, 0.15),
                         segment_file = "segments-cwob.tab",
                         igv_segment_file = "igv-segments-cwob.tab",
                         overwrite = FALSE,
@@ -181,9 +181,6 @@ setMethod(
 #' @param CNscale Character string specifying if copy number calls supplied are
 #'   relative (i.e.copy neutral == 0) or absolute (i.e. copy neutral ==2). One
 #'   of "relative" or "absolute".
-#' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
-#'   extremely large. The will remove the data points whose CN are greater than
-#'   \code{max_cn}. Default to 6.
 setMethod(
   f = "report_pipe",
   signature = c(x = "ConumeePipe"),
@@ -203,7 +200,6 @@ setMethod(
                         shiny_segment_file = "shiny-segments.tab",
                         detail_plot_height = 7,
                         detail_plot_width = 5,
-                        max_cn = 6,
                         overwrite = FALSE,
                         verbose = TRUE) {
     # Check argument
@@ -297,35 +293,35 @@ setMethod(
           }
         }
         # Plot detail regions
-        grs <- cnv_res@anno@detail
-        plot_lst <- lapply(
-          seq(length(grs)),
-          function(k) {
-            region_name <- GenomicRanges::mcols(grs[k])$name %>%
-              as.character() %>%
-              stringr::str_replace_all(., "\\/", "_")
-            outfile <- paste0(region_name, ".png")
-            outfile <- file.path(sample_dirs[i], outfile)
-            if (verbose)
-              message("Writing region ", region_name)
-            if (overwrite | !file.exists(outfile)) {
-              cnView(
-                dat$loci,
-                z = dat$z,
-                gr = grs[k],
-                genome = "hg19",
-                CNscale = CNscale,
-                cn_boundary = c(-0.15, 0.1)
-              ) %>%
-                ggplot2::ggsave(
-                  filename = outfile,
-                  plot = .,
-                  height = detail_plot_height,
-                  width = detail_plot_width
-                )
-            }
-          }
-        )
+        # grs <- cnv_res@anno@detail
+        # plot_lst <- lapply(
+        #   seq(length(grs)),
+        #   function(k) {
+        #     region_name <- GenomicRanges::mcols(grs[k])$name %>%
+        #       as.character() %>%
+        #       stringr::str_replace_all(., "\\/", "_")
+        #     outfile <- paste0(region_name, ".png")
+        #     outfile <- file.path(sample_dirs[i], outfile)
+        #     if (verbose)
+        #       message("Writing region ", region_name)
+        #     if (overwrite | !file.exists(outfile)) {
+        #       cnView(
+        #         dat$loci,
+        #         z = dat$z,
+        #         gr = grs[k],
+        #         genome = "hg19",
+        #         CNscale = CNscale,
+        #         cn_boundary = c(-0.15, 0.1)
+        #       ) %>%
+        #         ggplot2::ggsave(
+        #           filename = outfile,
+        #           plot = .,
+        #           height = detail_plot_height,
+        #           width = detail_plot_width
+        #         )
+        #     }
+        #   }
+        # )
       }
     )
   }
