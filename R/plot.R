@@ -19,7 +19,7 @@
   function(x,
            sample_id,
            gender = c("M", "F"),
-           cn_boundary = c(1.319508, 2.828427),
+           cn_boundary = c(-0.2, 0.15),
            chr_per_row = 4) {
     dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
     cnView(
@@ -46,7 +46,7 @@
 #'   boundaries to define CNVs. If a segment has a segment mean lower than
 #'   the first element or higher than the second element, it is a CNV. It is
 #'   the absolute value, so 2 means no copy number change. Default to
-#'   \code{c(1.319508, 2.828427)}.
+#'   \code{c(-0.2, 0.15)}.
 #' @param verbose A logical scalar. Default to TRUE.
 #' @return A list of \code{\link[gtable]{gtable}} class.
 #' @noRd
@@ -55,7 +55,7 @@
            sample_id,
            gender = c("M", "F"),
            size = 5e6,
-           cn_boundary = c(1.319508, 2.828427),
+           cn_boundary = c(-0.2, 0.15),
            verbose = TRUE) {
     dat <- .plot_single_sample_prep(x, sample_id, gender = gender)
     dat$z %>%
@@ -448,7 +448,7 @@ cnView <- function(x,
 #'   \code{c(-0.2, 0.15)}.
 #' @param max_cn A numeric scalar of the maximum of CN. The CNs are sometime
 #'   extremely large. The will remove the data points whose CN are greater than
-#'   \code{max_cn}. Default to 6.
+#'   \code{max_cn}.
 #' @return ggplot2 object
 #' @noRd
 cnView_buildMain <-
@@ -469,8 +469,10 @@ cnView_buildMain <-
         alpha = 0
       )
     if (CNscale == "relative") {
-      min_cn <- -2
-      max_cn <- 2
+      # min_cn <- -2
+      # max_cn <- 2
+      min_cn <- quantile(x$cn, probs = 0.01) - 0.5
+      max_cn <- quantile(x$cn, probs = 0.99) + 0.5
       cn_breaks <- c(-1, -0.5, 0, 0.4)
       cn_breaks <- c(seq(min_cn, -1), cn_breaks, seq(1, max_cn))
     } else {
