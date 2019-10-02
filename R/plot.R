@@ -468,11 +468,12 @@ cnView_buildMain <-
         mapping = ggplot2::aes_string(x = 'coordinate', y = 2),
         alpha = 0
       )
+    relative_amplitude <- 0.5
     if (CNscale == "relative") {
       # min_cn <- -2
       # max_cn <- 2
-      min_cn <- quantile(x$cn, probs = 0.01) - 0.5
-      max_cn <- quantile(x$cn, probs = 0.99) + 0.5
+      min_cn <- quantile(x$cn, probs = 0.01) - relative_amplitude
+      max_cn <- quantile(x$cn, probs = 0.99) + relative_amplitude
       cn_breaks <- c(-1, -0.5, 0, 0.4)
       cn_breaks <- c(seq(min_cn, -1), cn_breaks, seq(1, max_cn))
     } else {
@@ -482,8 +483,9 @@ cnView_buildMain <-
     }
     # Replace extremely large CN with max_cn.
     # x <- x[x$cn < max_cn, ]
-    x$cn[x$cn > max_cn] <- max_cn
-    x$cn[x$cn < min_cn] <- min_cn
+    set.seed(1)
+    x$cn[x$cn > max_cn] <- max_cn + relative_amplitude * rnorm(length(x$cn > max_cn))
+    x$cn[x$cn < min_cn] <- min_cn + relative_amplitude * rnorm(length(x$cn < min_cn))
 
     theme <- ggplot2::theme(
       legend.position = "top",
