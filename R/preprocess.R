@@ -62,6 +62,13 @@ preprocess <-
         message("Removing batch effects...")
         tictoc::tic()
       }
+      if (batch_effect_method == "cn") {
+        if (class(x) != "RatioSet" & class(x450k) != "GenomicRatioSet") {
+          if (class(x) == "MethylSet") {
+            x <- minfi::ratioConvert(x)
+          }
+        }
+      }
       x <-
         yamat::remove_batch_effect(x,
                                    batch = batch,
