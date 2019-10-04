@@ -160,7 +160,7 @@ conumee_backbone <- function(x,
     message("Preparing CNV analysis: annotation...")
     tictoc::tic()
   }
-  cnv_anno <- CNV.create_anno.yamat(x, detail_regions_preset = "conumee")
+  cnv_anno <- CNV.create_anno.yamat(x, detail_regions_preset = "yamat")
   if (verbose) tictoc::toc()
   # Load data to Conumee.
   if (verbose) {
