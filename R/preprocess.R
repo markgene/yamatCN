@@ -63,7 +63,7 @@ preprocess <-
         tictoc::tic()
       }
       if (batch_effect_method == "cn") {
-        if (class(x) != "RatioSet" & class(x450k) != "GenomicRatioSet") {
+        if (class(x) != "RatioSet" & class(x) != "GenomicRatioSet") {
           if (class(x) == "MethylSet") {
             x <- minfi::ratioConvert(x)
           }
