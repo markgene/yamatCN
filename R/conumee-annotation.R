@@ -45,9 +45,9 @@ NULL
 CNV.create_anno2 <-
   function (array_type = "EPIC",
             array_anno = "ilm10b4.hg19",
-            bin_minprobes = 15,
-            bin_minsize = 50000,
-            bin_maxsize = 5e+06,
+            bin_minprobes = 15 * 2,
+            bin_minsize = 50000 * 2,
+            bin_maxsize = 5e+06 * 2,
             chrXY = FALSE,
             exclude_regions = NULL,
             detail_regions = NULL)
