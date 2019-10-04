@@ -468,7 +468,7 @@ cnView_buildMain <-
         mapping = ggplot2::aes_string(x = 'coordinate', y = 2),
         alpha = 0
       )
-    relative_amplitude <- 0.5
+    relative_amplitude <- sd(x$cn)
     if (CNscale == "relative") {
       # min_cn <- -2
       # max_cn <- 2
