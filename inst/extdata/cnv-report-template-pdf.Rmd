@@ -39,9 +39,15 @@ Gender: `r params$gender`
 
 Sample prep: `r params$sample_prep`
 
+### Conumee plot
+
+```{r, fig.cap="Conumee genome plot."}
+knitr::include_graphics("genome_plot_conumee.png")
+```
+
 ### Genome plot
 
-```{r}
+```{r, fig.cap="Yamap genome plot."}
 knitr::include_graphics(params$genome_plot)
 ```
 
@@ -92,6 +98,32 @@ df %>%
   dplyr::rename(Chr = chrom, Start = loc.start, End = loc.end, Mean = seg.mean.shifted, Cytoband = cytoband, Gene = detail_region) %>%
   knitr::kable()
 ```
+
+### QC
+
+#### Detection p-value
+
+```{r, fig.cap="The right most is the query sample. Others are control samples of the same gender and sample preparation method."}
+knitr::include_graphics("detection_p_mean.png")
+```
+
+#### Density plot of beta values
+
+```{r, fig.cap="Density plot of beta values of query sample and reference samples. Query sample is in gray."}
+knitr::include_graphics("qc_density_plot.png")
+```
+
+```{r, fig.cap="Density bean plot of beta values of query sample and reference samples. Query sample is in gray."}
+knitr::include_graphics("qc_density_bean.png")
+```
+
+#### Probes
+
+```{r, fig.cap="Intensity of control probes with expected value. Each point is the observed intensity of a control probe. The array has hundreds of control probes for different purposes. They have different expected values, high, medium, low or background. The data points are organized by purpose and expected value."}
+knitr::include_graphics("qc_probes.png")
+```
+
+### Note
 
 The analysis is carried out R package *yamatCN* version `r params$version`. 
 
