@@ -6,6 +6,11 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
   html_document:
     theme: yeti
+    toc: true
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
 params:
   genome_plot: "genome-plot.png"
   detail_plot: "detail.png"
@@ -32,28 +37,29 @@ knitr::opts_chunk$set(echo = FALSE,
 ```{r}
 library(dplyr)
 library(readr)
+library(DT)
 ```
 
 
-### Sample information
+# Sample information
 
 Gender: `r params$gender`
 
 Sample prep: `r params$sample_prep`
 
-### Conumee plot
+# Conumee plot
 
 ```{r, fig.cap="Conumee genome plot."}
 knitr::include_graphics("genome_plot_conumee.png")
 ```
 
-### Genome plot
+# Genome plot
 
 ```{r, fig.cap="Yamap genome plot."}
 knitr::include_graphics(params$genome_plot)
 ```
 
-### Overall calls
+# Overall calls
 
 * Cutoff for gain: +0.15 segment mean at 5mb
 * Cutoff for loss: -0.20 at 10 mb
@@ -76,7 +82,7 @@ df %>%
   knitr::kable()
 ```
 
-### Cancer gene calls
+# Cancer gene calls
 
 Calls contain the following selected genes: CCND1, CDK4, CDK6, CDKN2A/B, EGFR, ERBB2, GLI2, MDM2, MET, MYC, MYCN, NF1, PTCH1, PTEN, RB1, TP53, PDGFRA, C19MC, NF2, CCND2, TERT, MDM4, BRAF, MYB, MYBL1, PPM1D, SMARCB1.
 
@@ -101,43 +107,70 @@ df %>%
   knitr::kable()
 ```
 
-### QC
+# QC
 
-#### Detection p-value
+## Detection p-value
 
-```{r, fig.cap="The right most is the query sample. Others are control samples of the same gender and sample preparation method."}
+```{r, fig.cap="The mean of detection p-value of each sample. We use 0.05 as QC threshold.", out.width = "80%"}
 knitr::include_graphics("detection_p_mean.png")
 ```
 
-#### Density plot of beta values
+> A detection p-value is returned for every genomic position in every sample. Small p-values indicate a good position. Positions with non-significant p-values (typically >0.01) should not be trusted.
+> 
+> The m+u method compares the total DNA signal (Methylated + Unmethylated) for each position to the background signal level. The background is estimated using negative control positions, assuming a normal distribution. Calculations are performed on the original (non-log) scale. 
+> - from the manual page of `minfi::detectionP()`.
 
-```{r, fig.cap="Density plot of beta values of query sample and reference samples. Query sample is in gray."}
+
+## Density plot of beta values
+
+```{r, fig.cap="Density plot of beta values of query sample and reference samples. Query sample is in gray. A good sample will have a bimodal distribution with two peaks of beta values at 0 and 1, corresponding to methylation and unmethylation respectively."}
 knitr::include_graphics("qc_density_plot.png")
 ```
 
-```{r, fig.cap="Density bean plot of beta values of query sample and reference samples. Query sample is in gray."}
+```{r, fig.cap="Density bean plot of beta values of query sample and reference samples. Query sample is in gray. A good sample will have a bimodal distribution with two peaks of beta values at 0 and 1, corresponding to methylation and unmethylation respectively."}
 knitr::include_graphics("qc_density_bean.png")
 ```
 
-#### Probes
+## Median intensity of meth and unmeth
+
+```{r, fig.cap="Median intensity of methylation and unmethylation signal. The plot is borrowed from `minfi::plotQC()` function. Basically, if the sum of median intensity of meth and unmeth above a threshold (default as 10.5 * 2), it is a good sample. I do not know how to use the plot because I do not find document about why and how it works. The data is normalized by SWAN method to calculate intensity.", out.width = "70%"}
+knitr::include_graphics("mean_unmeth_median.png", )
+```
+
+## Probes
 
 ```{r, fig.cap="Intensity of control probes with expected value. Each point is the observed intensity of a control probe. The array has hundreds of control probes for different purposes. They have different expected values, high, medium, low or background. The data points are organized by purpose and expected value."}
 knitr::include_graphics("qc_probes.png")
 ```
 
-### Note
+---------------------
 
-The analysis is carried out R package *yamatCN* version `r params$version`. 
+# Appendix
+
+## All segments
+
+```{r}
+segment_df <- read.table("segments.tab", header = TRUE, sep = "\t", stringsAsFactors = FALSE, fill = NA)
+segment_df %>%
+  dplyr::select(chrom, loc.start, loc.end, num.mark, seg.mean, seg.sd, cytoband, detail_region) %>%
+  DT::datatable(., extensions = 'Buttons', options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
+  ))
+```
+
+
 
 ---------------------
 
-### Reproducing the analysis
+# Reproducing the analysis {-}
 
 The analysis is carried out R package *yamatCN* version `r params$version`. 
 
 Below is detailed session information returned by `sessionInfo()`:
 
-```{r}
+```{r, eval=FALSE}
+# Deactivated
 sessionInfo()
 ```
 

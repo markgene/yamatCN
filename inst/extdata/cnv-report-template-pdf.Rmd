@@ -103,11 +103,18 @@ df %>%
 
 #### Detection p-value
 
-```{r, fig.cap="The right most is the query sample. Others are control samples of the same gender and sample preparation method."}
+> A detection p-value is returned for every genomic position in every sample. Small p-values indicate a good position. Positions with non-significant p-values (typically >0.01) should not be trusted.
+> 
+> The m+u method compares the total DNA signal (Methylated + Unmethylated) for each position to the background signal level. The background is estimated using negative control positions, assuming a normal distribution. Calculations are performed on the original (non-log) scale. 
+> - from the manual page of `minfi::detectionP()`.
+
+```{r, fig.cap="The mean of detection p-value of each sample. We use 0.05 as QC threshold."}
 knitr::include_graphics("detection_p_mean.png")
 ```
 
 #### Density plot of beta values
+
+A good sample will have a bimodal distribution with two peaks of beta values at 0 and 1, corresponding to methylation and unmethylation respectively.
 
 ```{r, fig.cap="Density plot of beta values of query sample and reference samples. Query sample is in gray."}
 knitr::include_graphics("qc_density_plot.png")
@@ -123,8 +130,15 @@ knitr::include_graphics("qc_density_bean.png")
 knitr::include_graphics("qc_probes.png")
 ```
 
+#### Mean of methylation and unmethylation signal
+
+We have not decided how to interpret the plot in the context of QC.
+
+```{r, fig.cap="Mean intensity of methylation and unmethylation signal. Normalized by SWAN method."}
+knitr::include_graphics("mean_unmeth_mean.png")
+```
+
 ### Note
 
 The analysis is carried out R package *yamatCN* version `r params$version`. 
-
 
